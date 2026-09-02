@@ -1168,6 +1168,7 @@ button{
 
     </div>
 
+<a href="?page=staff" style="text-decoration:none;color:#777;font-size:12px;font-weight:700;">เจ้าหน้าที่</a>
 </header>
 
 
@@ -1530,535 +1531,476 @@ button{
 
 
 <script>
+/* ============================================================
+   BUP Boost Up Life - SDP Booking
+   Frontend: Google Apps Script Web App
+   Database: Google Sheets
+   LINE OA: Messaging API Flex Message
+   ============================================================ */
 
-/* =========================================================
-   SDP ROUND CONFIGURATION
-========================================================= */
-
-const SDP_ROUNDS = [
-
-    {
-        id:"R0830",
-        start:"08:30",
-        end:"10:00",
-        enabled:true,
-
-        seats:[
-            {
-                id:"A1",
-                status:"available"
-            },
-            {
-                id:"A2",
-                status:"available"
-            }
-        ]
-    },
-
-
-    {
-        id:"R1030",
-        start:"10:30",
-        end:"12:00",
-        enabled:true,
-
-        seats:[
-            {
-                id:"B1",
-                status:"available"
-            },
-            {
-                id:"B2",
-                status:"available"
-            }
-        ]
-    },
-
-
-    {
-        id:"R1330",
-        start:"13:30",
-        end:"15:00",
-        enabled:true,
-
-        seats:[
-            {
-                id:"C1",
-                status:"booked"
-            },
-            {
-                id:"C2",
-                status:"booked"
-            }
-        ]
-    },
-
-
-    {
-        id:"R1530",
-        start:"15:30",
-        end:"17:00",
-        enabled:true,
-
-        seats:[
-            {
-                id:"D1",
-                status:"booked"
-            },
-            {
-                id:"D2",
-                status:"booked"
-            }
-        ]
-    }
-
-];
-
-
-const CHAIR_IMAGE =
-"https://www.clipartmax.com/png/middle/113-1131132_hospital-chair-furniture-icon-id-987-hospital-chair-furniture-icon-id-987.png";
-
-
-/* =========================================================
-   STATE
-========================================================= */
-
+let scheduleRows = [];
 let selectedDate = null;
 let selectedRound = null;
 let selectedSeat = null;
-let currentMonth = 5;
-let currentYear = 2024;
-
-
-/* =========================================================
-   MONTH
-========================================================= */
+let currentMonth = new Date().getMonth();
+let currentYear = new Date().getFullYear();
 
 const THAI_MONTHS = [
-    "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน",
-    "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม",
-    "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+  "มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน",
+  "กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"
 ];
 
+document.addEventListener("DOMContentLoaded", function () {
+  loadSchedule();
+});
 
-/* =========================================================
-   INIT
-========================================================= */
+function gas(fn, args, ok, fail) {
+  let runner = google.script.run
+    .withSuccessHandler(ok)
+    .withFailureHandler(fail || function(err){
+      Swal.fire({
+        icon:"error",
+        title:"เกิดข้อผิดพลาด",
+        text: err && err.message ? err.message : String(err),
+        confirmButtonColor:"#e9232d"
+      });
+    });
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function(){
-        renderCalendar();
-        renderRounds();
-        updateSummary();
-    }
-);
-
-
-/* =========================================================
-   CALENDAR
-========================================================= */
-
-function renderCalendar(){
-
-    const days = document.getElementById("calendarDays");
-    const title = document.getElementById("monthTitle");
-
-    title.textContent = THAI_MONTHS[currentMonth] + " " + (currentYear + 543);
-    days.innerHTML = "";
-
-    const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-    const totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();
-
-    for(let i=0; i<firstDay; i++){
-        const empty = document.createElement("div");
-        empty.className = "day disabled";
-        days.appendChild(empty);
-    }
-
-    for(let d=1; d<=totalDays; d++){
-        const el = document.createElement("div");
-        el.className = "day available";
-        el.textContent = d;
-
-        if(
-            selectedDate &&
-            selectedDate.date === d &&
-            selectedDate.month === currentMonth &&
-            selectedDate.year === currentYear
-        ){
-            el.classList.add("selected");
-        }
-
-        el.onclick = function(){
-            selectDate(d);
-        };
-
-        days.appendChild(el);
-    }
-
+  if (args === undefined) runner[fn]();
+  else runner[fn](args);
 }
 
+function loadSchedule() {
+  Swal.fire({
+    title:"กำลังโหลดรอบบริจาค",
+    text:"กรุณารอสักครู่",
+    allowOutsideClick:false,
+    didOpen:()=>Swal.showLoading()
+  });
 
-/* =========================================================
-   CHANGE MONTH
-========================================================= */
+  gas("getPublicSDPSchedule", null, function(rows){
+    Swal.close();
+    scheduleRows = Array.isArray(rows) ? rows : [];
+
+    // Start at today's month, not a hard-coded year.
+    currentMonth = new Date().getMonth();
+    currentYear = new Date().getFullYear();
+
+    renderCalendar();
+    renderRounds();
+    updateSummary();
+  });
+}
 
 function changeMonth(direction){
-    currentMonth += direction;
+  currentMonth += direction;
 
-    if(currentMonth < 0){
-        currentMonth = 11;
-        currentYear--;
-    }
+  if(currentMonth < 0){
+    currentMonth = 11;
+    currentYear--;
+  }
+  if(currentMonth > 11){
+    currentMonth = 0;
+    currentYear++;
+  }
 
-    if(currentMonth > 11){
-        currentMonth = 0;
-        currentYear++;
-    }
-
-    selectedRound = null;
-    selectedSeat = null;
-
-    renderCalendar();
-    renderRounds();
-    updateSummary();
+  selectedRound = null;
+  selectedSeat = null;
+  renderCalendar();
+  renderRounds();
+  updateSummary();
 }
 
+function dateKey(y,m,d){
+  return y + "-" + String(m+1).padStart(2,"0") + "-" + String(d).padStart(2,"0");
+}
 
-/* =========================================================
-   SELECT DATE
-========================================================= */
+function getRowsForDate(key){
+  return scheduleRows.filter(r => r.dateKey === key && r.enabled === true);
+}
+
+function renderCalendar(){
+  const days = document.getElementById("calendarDays");
+  const title = document.getElementById("monthTitle");
+
+  title.textContent = THAI_MONTHS[currentMonth] + " " + (currentYear + 543);
+  days.innerHTML = "";
+
+  const firstDay = new Date(currentYear,currentMonth,1).getDay();
+  const totalDays = new Date(currentYear,currentMonth+1,0).getDate();
+
+  for(let i=0;i<firstDay;i++){
+    const empty = document.createElement("div");
+    empty.className = "day disabled";
+    days.appendChild(empty);
+  }
+
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  for(let d=1;d<=totalDays;d++){
+    const el = document.createElement("div");
+    const key = dateKey(currentYear,currentMonth,d);
+    const rows = getRowsForDate(key);
+    const hasOpen = rows.some(r => r.enabled && r.available > 0);
+    const dateObj = new Date(currentYear,currentMonth,d);
+    dateObj.setHours(0,0,0,0);
+
+    el.className = "day";
+    if(hasOpen && dateObj >= today) el.classList.add("available");
+    else el.classList.add("disabled");
+
+    el.textContent = d;
+
+    if(selectedDate && selectedDate.key === key){
+      el.classList.add("selected");
+    }
+
+    if(hasOpen && dateObj >= today){
+      el.onclick = function(){ selectDate(d); };
+    }
+
+    days.appendChild(el);
+  }
+}
 
 function selectDate(day){
-    selectedDate = {
-        date: day,
-        month: currentMonth,
-        year: currentYear
-    };
+  const key = dateKey(currentYear,currentMonth,day);
+  const rows = getRowsForDate(key);
 
-    selectedRound = null;
-    selectedSeat = null;
+  if(!rows.length || !rows.some(r=>r.enabled && r.available>0)){
+    Swal.fire({
+      icon:"info",
+      title:"ยังไม่เปิดรับบริจาค",
+      text:"วันที่เลือกยังไม่มีรอบที่เปิดรับบริจาค",
+      confirmButtonColor:"#e9232d"
+    });
+    return;
+  }
 
-    renderCalendar();
-    renderRounds();
-    updateSummary();
+  selectedDate = {
+    date:day,
+    month:currentMonth,
+    year:currentYear,
+    key:key
+  };
+
+  selectedRound = null;
+  selectedSeat = null;
+
+  renderCalendar();
+  renderRounds();
+  updateSummary();
 }
-
-
-/* =========================================================
-   THAI DATE
-========================================================= */
 
 function getThaiDate(){
-    if(!selectedDate){
-        return "กรุณาเลือกวันที่";
-    }
+  if(!selectedDate) return "กรุณาเลือกวันที่";
 
-    const d = new Date(selectedDate.year, selectedDate.month, selectedDate.date);
-    const weekdays = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"];
+  const d = new Date(selectedDate.year,selectedDate.month,selectedDate.date);
+  const weekdays = ["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์","เสาร์"];
 
-    return (
-        "วัน" + weekdays[d.getDay()] + " " +
-        selectedDate.date + " " +
-        THAI_MONTHS[selectedDate.month] + " " +
-        (selectedDate.year + 543)
-    );
+  return "วัน" + weekdays[d.getDay()] + " " +
+    selectedDate.date + " " +
+    THAI_MONTHS[selectedDate.month] + " " +
+    (selectedDate.year + 543);
 }
-
-
-/* =========================================================
-   RENDER ROUNDS
-========================================================= */
 
 function renderRounds(){
+  const container = document.getElementById("roundList");
+  container.innerHTML = "";
 
-    const container = document.getElementById("roundList");
-    container.innerHTML = "";
+  if(!selectedDate){
+    container.innerHTML =
+      '<div style="padding:25px;text-align:center;color:#888;">กรุณาเลือกวันที่ก่อน</div>';
+    return;
+  }
 
-    SDP_ROUNDS.forEach(function(round){
+  const rows = getRowsForDate(selectedDate.key)
+    .filter(r=>r.enabled)
+    .sort((a,b)=>String(a.start).localeCompare(String(b.start)));
 
-        if(!round.enabled){
-            return;
-        }
+  if(!rows.length){
+    container.innerHTML =
+      '<div style="padding:25px;text-align:center;color:#888;">วันนี้ไม่มีรอบเปิดรับบริจาค</div>';
+    return;
+  }
 
-        const available = round.seats.filter(s => s.status === "available").length;
+  rows.forEach(function(round){
+    const available = Number(round.available || 0);
 
-        let statusText;
-        let statusClass;
+    let statusText = available > 0 ? "ว่าง " + available + " ที่นั่ง" : "เต็ม";
+    let statusClass = available > 0 ? "status-green" : "status-red";
 
-        if(available === 0){
-            statusText = "เต็ม";
-            statusClass = "status-red";
-        }
-        else{
-            statusText = "ว่าง " + available + " ที่นั่ง";
-            statusClass = "status-green";
-        }
+    const el = document.createElement("div");
+    el.className = "round";
 
-        const el = document.createElement("div");
-        el.className = "round";
+    if(selectedRound && selectedRound.id === round.id){
+      el.classList.add("selected-round");
+    }
 
-        if(selectedRound && selectedRound.id === round.id){
-            el.classList.add("selected-round");
-        }
+    el.innerHTML = `
+      <div class="round-time">
+        ${escapeHtml(round.start)} น.
+        <span>ถึง ${escapeHtml(round.end)} น.</span>
+      </div>
 
-        el.innerHTML = `
-            <div class="round-time">
-                ${round.start} น.
-                <span>ถึง ${round.end} น.</span>
-            </div>
+      <div class="seats">
+        ${renderSeats(round)}
+      </div>
 
-            <div class="seats">
-                ${renderSeats(round)}
-            </div>
+      <div class="round-status ${statusClass}">
+        ${statusText}
+      </div>
 
-            <div class="round-status ${statusClass}">
-                ${statusText}
-            </div>
+      <div class="arrow">
+        ${selectedRound && selectedRound.id === round.id ? "⌃" : "⌄"}
+      </div>
+    `;
 
-            <div class="arrow">
-                ${selectedRound && selectedRound.id === round.id ? "⌃" : "⌄"}
-            </div>
-        `;
+    container.appendChild(el);
 
-        container.appendChild(el);
-
-        const buttons = el.querySelectorAll(".seat");
-        buttons.forEach(function(button){
-            button.onclick = function(event){
-                event.stopPropagation();
-                selectSeat(round, button.dataset.seat);
-            };
-        });
-
-        el.onclick = function(){
-            if(available === 0){
-                Swal.fire({
-                    icon:"warning",
-                    title:"รอบนี้เต็มแล้ว",
-                    text:"กรุณาเลือกรอบเวลาอื่น",
-                    confirmButtonText:"ตกลง",
-                    confirmButtonColor:"#e9232d"
-                });
-                return;
-            }
-
-            if(selectedRound && selectedRound.id === round.id){
-                selectedRound = null;
-                selectedSeat = null;
-            }
-            else{
-                selectedRound = round;
-                selectedSeat = null;
-            }
-
-            renderRounds();
-            updateSummary();
-        };
-
+    el.querySelectorAll(".seat").forEach(function(button){
+      button.onclick = function(event){
+        event.stopPropagation();
+        selectSeat(round, button.dataset.seat);
+      };
     });
 
+    el.onclick = function(){
+      if(available === 0){
+        Swal.fire({
+          icon:"warning",
+          title:"รอบนี้เต็มแล้ว",
+          text:"กรุณาเลือกรอบเวลาอื่น",
+          confirmButtonText:"ตกลง",
+          confirmButtonColor:"#e9232d"
+        });
+        return;
+      }
+
+      if(selectedRound && selectedRound.id === round.id){
+        selectedRound = null;
+        selectedSeat = null;
+      }else{
+        selectedRound = round;
+        selectedSeat = null;
+      }
+
+      renderRounds();
+      updateSummary();
+    };
+  });
 }
-
-
-/* =========================================================
-   RENDER REAL IMAGE CHAIRS
-========================================================= */
 
 function renderSeats(round){
-    return round.seats.map(function(seat){
-        const booked = seat.status === "booked";
-        const selected = selectedRound && selectedRound.id === round.id && selectedSeat === seat.id;
+  const seats = Array.isArray(round.seats) ? round.seats : [];
 
-        let className = "seat";
-        if(booked){ className += " booked"; }
-        if(selected){ className += " selected"; }
+  return seats.map(function(seat){
+    const booked = seat.status === "booked";
+    const selected =
+      selectedRound &&
+      selectedRound.id === round.id &&
+      selectedSeat === seat.id;
 
-        return `
-            <button
-                class="${className}"
-                data-seat="${seat.id}"
-                ${booked ? "disabled" : ""}
-            >
-                <img
-                    class="seat-image"
-                    src="${CHAIR_IMAGE}"
-                    alt="เก้าอี้ ${seat.id}"
-                >
-                <div class="seat-label">
-                    ${selected ? "เลือกแล้ว" : booked ? "จองแล้ว" : "เก้าอี้ " + seat.id}
-                </div>
-            </button>
-        `;
-    }).join("");
+    let className = "seat";
+    if(booked) className += " booked";
+    if(selected) className += " selected";
+
+    return `
+      <button
+        class="${className}"
+        data-seat="${escapeHtml(seat.id)}"
+        ${booked ? "disabled" : ""}
+      >
+        <img
+          class="seat-image"
+          src="${escapeHtml(round.chairImage || "https://www.clipartmax.com/png/middle/113-1131132_hospital-chair-furniture-icon-id-987-hospital-chair-furniture-icon-id-987.png")}"
+          alt="เก้าอี้ ${escapeHtml(seat.id)}"
+        >
+        <div class="seat-label">
+          ${selected ? "เลือกแล้ว" : booked ? "จองแล้ว" : "เก้าอี้ " + escapeHtml(seat.id)}
+        </div>
+      </button>
+    `;
+  }).join("");
 }
-
-
-/* =========================================================
-   SELECT SEAT
-========================================================= */
 
 function selectSeat(round, seatId){
-    const seat = round.seats.find(s => s.id === seatId);
+  const seat = (round.seats || []).find(s=>s.id===seatId);
+  if(!seat || seat.status==="booked") return;
 
-    if(!seat || seat.status === "booked"){
-        return;
-    }
+  selectedRound = round;
+  selectedSeat = seatId;
 
-    selectedRound = round;
-    selectedSeat = seatId;
-
-    renderRounds();
-    updateSummary();
+  renderRounds();
+  updateSummary();
 }
-
-
-/* =========================================================
-   SUMMARY
-========================================================= */
 
 function updateSummary(){
-    document.getElementById("summaryDate").textContent = getThaiDate();
-    document.getElementById("summaryTime").textContent = selectedRound ? selectedRound.start + " - " + selectedRound.end + " น." : "กรุณาเลือกรอบ";
+  document.getElementById("summaryDate").textContent = getThaiDate();
+  document.getElementById("summaryTime").textContent =
+    selectedRound
+      ? selectedRound.start + " - " + selectedRound.end + " น."
+      : "กรุณาเลือกรอบ";
 
-    const btn = document.getElementById("nextBtn");
-    btn.disabled = !(selectedDate && selectedRound && selectedSeat);
+  const btn = document.getElementById("nextBtn");
+  btn.disabled = !(selectedDate && selectedRound && selectedSeat);
 }
 
+async function startBooking(){
+  if(!selectedDate || !selectedRound || !selectedSeat){
+    Swal.fire({
+      icon:"warning",
+      title:"กรุณาเลือกข้อมูลให้ครบ",
+      text:"กรุณาเลือกวันที่ รอบเวลา และเก้าอี้",
+      confirmButtonColor:"#e9232d"
+    });
+    return;
+  }
 
-/* =========================================================
-   START BOOKING
-========================================================= */
+  const {value:form} = await Swal.fire({
+    title:"ข้อมูลสำหรับการจอง",
+    html:`
+      <div style="text-align:left;">
+        <label>ชื่อ-นามสกุล</label>
+        <input id="sdpName" class="swal2-input" placeholder="กรอกชื่อ-นามสกุล">
+        <label>เบอร์โทรศัพท์</label>
+        <input id="sdpPhone" class="swal2-input" inputmode="tel" placeholder="กรอกเบอร์โทรศัพท์">
+        <label>LINE User ID <span style="color:#999;font-size:11px;">(ถ้าระบบ Login มีค่าให้ใส่)</span></label>
+        <input id="sdpLineId" class="swal2-input" placeholder="Uxxxxxxxx..." value="${escapeHtml(window.LINE_USER_ID || "")}">
+      </div>
+    `,
+    focusConfirm:false,
+    showCancelButton:true,
+    confirmButtonText:"ดำเนินการต่อ",
+    cancelButtonText:"ยกเลิก",
+    confirmButtonColor:"#e9232d",
+    preConfirm:()=>{
+      const name = document.getElementById("sdpName").value.trim();
+      const phone = document.getElementById("sdpPhone").value.trim();
+      const lineUserId = document.getElementById("sdpLineId").value.trim();
 
-function startBooking(){
-    if(!selectedDate || !selectedRound || !selectedSeat){
-        Swal.fire({
-            icon:"warning",
-            title:"กรุณาเลือกข้อมูลให้ครบ",
-            text:"กรุณาเลือกวันที่ รอบเวลา และเก้าอี้",
-            confirmButtonText:"ตกลง",
-            confirmButtonColor:"#e9232d"
-        });
-        return;
+      if(!name || !phone){
+        Swal.showValidationMessage("กรุณากรอกชื่อและเบอร์โทรศัพท์");
+        return false;
+      }
+
+      return {name,phone,lineUserId};
+    }
+  });
+
+  if(!form) return;
+
+  await confirmAndSave(form);
+}
+
+async function confirmAndSave(form){
+  const result = await Swal.fire({
+    icon:"question",
+    title:"ยืนยันการจอง",
+    html:`
+      <div style="text-align:left;line-height:1.9;">
+        <b>🩸 ประเภท</b><br>บริจาคเกล็ดเลือด (SDP)<br>
+        <b>📅 วันที่</b><br>${escapeHtml(getThaiDate())}<br>
+        <b>🕐 เวลา</b><br>${escapeHtml(selectedRound.start)} - ${escapeHtml(selectedRound.end)} น.<br>
+        <b>🪑 เก้าอี้</b><br>${escapeHtml(selectedSeat)}<br>
+        <b>👤 ผู้จอง</b><br>${escapeHtml(form.name)}<br>
+        <b>📍 สถานที่</b><br>ธนาคารเลือด โรงพยาบาลยะลา
+      </div>
+    `,
+    showCancelButton:true,
+    confirmButtonText:"✓ ยืนยันการจอง",
+    cancelButtonText:"ยกเลิก",
+    confirmButtonColor:"#e9232d",
+    cancelButtonColor:"#999",
+    reverseButtons:true
+  });
+
+  if(!result.isConfirmed) return;
+
+  Swal.fire({
+    title:"กำลังบันทึกการจอง",
+    text:"กรุณารอสักครู่",
+    allowOutsideClick:false,
+    didOpen:()=>Swal.showLoading()
+  });
+
+  const payload = {
+    dateKey:selectedDate.key,
+    roundId:selectedRound.id,
+    seatId:selectedSeat,
+    name:form.name,
+    phone:form.phone,
+    lineUserId:form.lineUserId || window.LINE_USER_ID || ""
+  };
+
+  gas("createSDPBooking", payload, function(res){
+    if(!res || !res.success){
+      Swal.fire({
+        icon:"error",
+        title:"ไม่สามารถจองได้",
+        text:(res && res.message) || "กรุณาลองใหม่อีกครั้ง",
+        confirmButtonColor:"#e9232d"
+      });
+      loadSchedule();
+      return;
     }
 
-    Swal.fire({
-        icon:"question",
-        title:"ยืนยันการจอง",
-        html:`
-            <div style="text-align:left; line-height:1.9;">
-                <b>🩸 ประเภท</b><br>บริจาคเกล็ดเลือด (SDP)<br>
-                <b>📅 วันที่</b><br>${getThaiDate()}<br>
-                <b>🕐 เวลา</b><br>${selectedRound.start} - ${selectedRound.end} น.<br>
-                <b>🪑 เก้าอี้</b><br>${selectedSeat}<br>
-                <b>📍 สถานที่</b><br>ธนาคารเลือด โรงพยาบาลยะลา
-            </div>
-        `,
-        showCancelButton:true,
-        confirmButtonText:"✓ ยืนยันการจอง",
-        cancelButtonText:"ยกเลิก",
-        confirmButtonColor:"#e9232d",
-        cancelButtonColor:"#999",
-        reverseButtons:true
-    }).then(function(result){
-        if(result.isConfirmed){
-            saveBooking();
-        }
-    });
+    showBookingSuccess(res.booking);
+    loadSchedule();
+  });
 }
 
+function showBookingSuccess(booking){
+  Swal.fire({
+    width:520,
+    showConfirmButton:true,
+    confirmButtonText:"รับทราบ",
+    confirmButtonColor:"#e9232d",
+    allowOutsideClick:false,
+    html:`
+      <div>
+        <div class="success-badge">✓ จองสำเร็จ</div>
 
-/* =========================================================
-   SAVE BOOKING
-========================================================= */
+        <div style="font-size:21px;font-weight:900;margin-bottom:6px;">
+          จองบริจาคเกล็ดเลือดสำเร็จ
+        </div>
 
-function saveBooking(){
-    showBookingSuccess();
+        <div style="color:#666;margin-bottom:15px;">
+          ระบบบันทึกการจองของท่านเรียบร้อยแล้ว
+        </div>
+
+        <div style="background:#fff8f8;border-radius:15px;padding:12px;text-align:left;border:1px solid #ffe3e3;">
+          <div>🆔 <b>เลขที่จอง:</b> ${escapeHtml(booking.bookingId)}</div>
+          <div>🩸 <b>ประเภท:</b> บริจาคเกล็ดเลือด (SDP)</div>
+          <div>📅 <b>วันที่:</b> ${escapeHtml(booking.thaiDate)}</div>
+          <div>🕐 <b>เวลา:</b> ${escapeHtml(booking.start)} - ${escapeHtml(booking.end)} น.</div>
+          <div>🪑 <b>เก้าอี้:</b> ${escapeHtml(booking.seatId)}</div>
+          <div>📍 <b>สถานที่:</b> ธนาคารเลือด โรงพยาบาลยะลา</div>
+        </div>
+
+        <div class="advice-box">
+          <div class="advice-title">💡 คำแนะนำก่อนบริจาค</div>
+          <div class="advice-grid">
+            <div class="advice-col"><div class="advice-emoji">🥛</div><div class="advice-desc">ดื่มน้ำ 3-4 แก้ว ก่อนบริจาค</div></div>
+            <div class="advice-col"><div class="advice-emoji">🍽️</div><div class="advice-desc">รับประทานอาหาร ก่อนบริจาค 1-2 ชม.</div></div>
+            <div class="advice-col"><div class="advice-emoji">🌙</div><div class="advice-desc">พักผ่อนให้เพียงพอ นอนหลับ 6-8 ชม.</div></div>
+            <div class="advice-col"><div class="advice-emoji">👕</div><div class="advice-desc">สวมเสื้อแขนสั้น หรือเสื้อที่สะดวก</div></div>
+          </div>
+        </div>
+      </div>
+    `
+  });
 }
 
-
-/* =========================================================
-   SUCCESS + BADGE ADVICE
-========================================================= */
-
-function showBookingSuccess(){
-
-    Swal.fire({
-
-        width:520,
-        showConfirmButton:true,
-        confirmButtonText:"รับทราบ",
-        confirmButtonColor:"#e9232d",
-        allowOutsideClick:false,
-
-        html:`
-
-            <div>
-
-                <!-- SUCCESS BADGE -->
-                <div class="success-badge">
-                    ✓ จองสำเร็จ
-                </div>
-
-                <div style="font-size:21px; font-weight:900; margin-bottom:6px;">
-                    จองบริจาคเกล็ดเลือดสำเร็จ
-                </div>
-
-                <div style="color:#666; margin-bottom:15px;">
-                    ระบบบันทึกการจองของท่าน เรียบร้อยแล้ว
-                </div>
-
-                <!-- BOOKING SUMMARY -->
-                <div style="background:#fff8f8; border-radius:15px; padding:12px; text-align:left; border:1px solid #ffe3e3;">
-                    <div>🩸 <b>ประเภท:</b> บริจาคเกล็ดเลือด (SDP)</div>
-                    <div>📅 <b>วันที่:</b> ${getThaiDate()}</div>
-                    <div>🕐 <b>เวลา:</b> ${selectedRound.start} - ${selectedRound.end} น.</div>
-                    <div>🪑 <b>เก้าอี้:</b> ${selectedSeat}</div>
-                    <div>📍 <b>สถานที่:</b> ธนาคารเลือด โรงพยาบาลยะลา</div>
-                </div>
-
-                <!-- ADVICE BOX -->
-                <div class="advice-box">
-
-                    <div class="advice-title">
-                        💡 คำแนะนำก่อนบริจาค
-                    </div>
-
-                    <div class="advice-grid">
-
-                        <div class="advice-col">
-                            <div class="advice-emoji">🥛</div>
-                            <div class="advice-desc">ดื่มน้ำ 3-4 แก้ว ก่อนบริจาค</div>
-                        </div>
-
-                        <div class="advice-col">
-                            <div class="advice-emoji">🍽️</div>
-                            <div class="advice-desc">รับประทานอาหาร ก่อนบริจาค 1-2 ชม.</div>
-                        </div>
-
-                        <div class="advice-col">
-                            <div class="advice-emoji">🌙</div>
-                            <div class="advice-desc">พักผ่อนให้เพียงพอ นอนหลับ 6-8 ชม.</div>
-                        </div>
-
-                        <div class="advice-col">
-                            <div class="advice-emoji">👕</div>
-                            <div class="advice-desc">สวมเสื้อแขนสั้น หรือเสื้อที่สะดวก</div>
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        `
-
-    });
-
+function escapeHtml(v){
+  return String(v ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 }
-
 </script>
 
 </body>
