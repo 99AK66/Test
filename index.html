@@ -54,12 +54,12 @@ button{
 
 
 /* =========================================================
-   HEADER
+   HEADER (Updated to match target layout)
 ========================================================= */
 
 .header{
-    height:88px;
-    padding:10px 28px;
+    height:78px;
+    padding:10px 24px;
 
     display:flex;
     align-items:center;
@@ -79,18 +79,9 @@ button{
     gap:12px;
 }
 
-.back-btn{
+.logo{
     width:42px;
     height:42px;
-    border:0;
-    background:transparent;
-    font-size:35px;
-    color:#202532;
-}
-
-.logo{
-    width:48px;
-    height:48px;
     border-radius:50%;
 
     background:linear-gradient(
@@ -105,57 +96,27 @@ button{
     align-items:center;
     justify-content:center;
 
-    font-size:27px;
+    font-size:23px;
 
     box-shadow:
-        0 5px 15px rgba(220,20,40,.20);
+        0 4px 12px rgba(220,20,40,.20);
+}
+
+.brand-info {
+    display: flex;
+    flex-direction: column;
 }
 
 .brand-title{
-    font-size:23px;
+    font-size:18px;
     font-weight:900;
+    line-height:1.2;
 }
 
 .brand-sub{
     font-size:13px;
     color:#555;
-    margin-top:2px;
-}
-
-.header-right{
-    position:relative;
-}
-
-.notification{
-    width:48px;
-    height:48px;
-    border:0;
-    background:transparent;
-    font-size:29px;
-}
-
-.notification-badge{
-    position:absolute;
-
-    right:0;
-    top:-2px;
-
-    min-width:25px;
-    height:25px;
-
-    padding:0 6px;
-
-    border-radius:20px;
-
-    background:#e9232d;
-    color:#fff;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    font-size:12px;
-    font-weight:800;
+    margin-top:1px;
 }
 
 
@@ -931,31 +892,22 @@ button{
 @media(max-width:700px){
 
     .header{
-        height:72px;
-        padding:8px 12px;
-    }
-
-    .back-btn{
-        width:35px;
-        font-size:30px;
+        height:68px;
+        padding:8px 16px;
     }
 
     .logo{
-        width:40px;
-        height:40px;
-        font-size:22px;
+        width:38px;
+        height:38px;
+        font-size:20px;
     }
 
     .brand-title{
-        font-size:17px;
+        font-size:16px;
     }
 
     .brand-sub{
-        font-size:10px;
-    }
-
-    .notification{
-        font-size:25px;
+        font-size:11px;
     }
 
     .content{
@@ -1191,24 +1143,18 @@ button{
 
 
 <!-- ======================================================
-     HEADER
+     HEADER (Updated)
 ====================================================== -->
 
 <header class="header">
 
     <div class="header-left">
 
-        <button
-            class="back-btn"
-            onclick="history.back()">
-            ‹
-        </button>
-
         <div class="logo">
-            ✚
+            🩸
         </div>
 
-        <div>
+        <div class="brand-info">
 
             <div class="brand-title">
                 BUP Boost Up Life
@@ -1219,19 +1165,6 @@ button{
             </div>
 
         </div>
-
-    </div>
-
-
-    <div class="header-right">
-
-        <button class="notification">
-            ♧
-        </button>
-
-        <span class="notification-badge">
-            2
-        </span>
 
     </div>
 
