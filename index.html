@@ -866,62 +866,61 @@ button{
 
 
 /* =========================================================
-   ADVICE BADGE
+   ADVICE BOX (NEW 4-COL STYLE)
 ========================================================= */
 
 .advice-box{
     margin-top:15px;
-
-    background:#fff7f7;
-
-    border:1px solid #ffe0e0;
-
+    background:#fffbf8;
+    border:1px solid #ffe8dc;
     border-radius:15px;
-
     padding:14px;
-
     text-align:left;
 }
 
 .advice-title{
     color:#e9232d;
-
     font-weight:900;
-
     font-size:15px;
-
-    margin-bottom:8px;
-}
-
-.advice-item{
-    display:flex;
-
-    align-items:flex-start;
-
-    gap:8px;
-
-    padding:4px 0;
-
-    font-size:13px;
-}
-
-.advice-icon{
-    width:22px;
-    height:22px;
-
-    border-radius:50%;
-
-    background:#e9232d;
-
-    color:#fff;
-
-    flex:none;
-
+    margin-bottom:10px;
     display:flex;
     align-items:center;
-    justify-content:center;
+    gap:6px;
+}
 
-    font-size:11px;
+.advice-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+.advice-col {
+    text-align: center;
+    padding: 8px 4px;
+    border-right: 1px solid #f3dcd0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.advice-col:last-child {
+    border-right: none;
+}
+
+.advice-emoji {
+    font-size: 26px;
+    margin-bottom: 6px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.advice-desc {
+    font-size: 11px;
+    color: #444;
+    line-height: 1.4;
 }
 
 
@@ -1137,6 +1136,23 @@ button{
 }
 
 
+/* Responsive สำหรับกล่องคำแนะนำในหน้าจอเล็ก */
+@media(max-width: 500px) {
+    .advice-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    .advice-col {
+        border-right: none;
+        border-bottom: 1px solid #f3dcd0;
+        padding-bottom: 10px;
+    }
+    .advice-col:nth-child(odd) {
+        border-right: 1px solid #f3dcd0;
+    }
+}
+
+
 /* =========================================================
    SMALL MOBILE
 ========================================================= */
@@ -1241,10 +1257,6 @@ button{
 ====================================================== -->
 
 <section class="hero">
-
-    <!--
-       ภาพนี้เปลี่ยนเป็นรูป SDP ของจริงได้
-    -->
 
     <img
         class="hero-image"
@@ -1595,11 +1607,6 @@ button{
 
 /* =========================================================
    SDP ROUND CONFIGURATION
-
-   ภายหลังเปลี่ยนส่วนนี้ให้รับข้อมูลจาก GAS ได้
-
-   1 รอบ = 90 นาที
-   2 เก้าอี้
 ========================================================= */
 
 const SDP_ROUNDS = [
@@ -1682,15 +1689,6 @@ const SDP_ROUNDS = [
 ];
 
 
-/* =========================================================
-   CHAIR IMAGE
-
-   ใช้ภาพ PNG จริง
-
-   เปลี่ยน URL นี้เป็นรูปเก้าอี้ SDP
-   ของหน่วยงานได้โดยไม่ต้องแก้ logic
-========================================================= */
-
 const CHAIR_IMAGE =
 "https://www.clipartmax.com/png/middle/113-1131132_hospital-chair-furniture-icon-id-987-hospital-chair-furniture-icon-id-987.png";
 
@@ -1700,13 +1698,9 @@ const CHAIR_IMAGE =
 ========================================================= */
 
 let selectedDate = null;
-
 let selectedRound = null;
-
 let selectedSeat = null;
-
 let currentMonth = 5;
-
 let currentYear = 2024;
 
 
@@ -1715,20 +1709,9 @@ let currentYear = 2024;
 ========================================================= */
 
 const THAI_MONTHS = [
-
-    "มกราคม",
-    "กุมภาพันธ์",
-    "มีนาคม",
-    "เมษายน",
-    "พฤษภาคม",
-    "มิถุนายน",
-    "กรกฎาคม",
-    "สิงหาคม",
-    "กันยายน",
-    "ตุลาคม",
-    "พฤศจิกายน",
-    "ธันวาคม"
-
+    "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน",
+    "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม",
+    "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
 ];
 
 
@@ -1739,13 +1722,9 @@ const THAI_MONTHS = [
 document.addEventListener(
     "DOMContentLoaded",
     function(){
-
         renderCalendar();
-
         renderRounds();
-
         updateSummary();
-
     }
 );
 
@@ -1756,77 +1735,25 @@ document.addEventListener(
 
 function renderCalendar(){
 
-    const days =
-        document.getElementById(
-            "calendarDays"
-        );
+    const days = document.getElementById("calendarDays");
+    const title = document.getElementById("monthTitle");
 
-    const title =
-        document.getElementById(
-            "monthTitle"
-        );
-
-
-    title.textContent =
-        THAI_MONTHS[currentMonth]
-        + " "
-        + (currentYear + 543);
-
-
+    title.textContent = THAI_MONTHS[currentMonth] + " " + (currentYear + 543);
     days.innerHTML = "";
 
+    const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+    const totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();
 
-    const firstDay =
-        new Date(
-            currentYear,
-            currentMonth,
-            1
-        ).getDay();
-
-
-    const totalDays =
-        new Date(
-            currentYear,
-            currentMonth + 1,
-            0
-        ).getDate();
-
-
-    for(
-        let i=0;
-        i<firstDay;
-        i++
-    ){
-
-        const empty =
-            document.createElement(
-                "div"
-            );
-
-        empty.className =
-            "day disabled";
-
+    for(let i=0; i<firstDay; i++){
+        const empty = document.createElement("div");
+        empty.className = "day disabled";
         days.appendChild(empty);
-
     }
 
-
-    for(
-        let d=1;
-        d<=totalDays;
-        d++
-    ){
-
-        const el =
-            document.createElement(
-                "div"
-            );
-
-        el.className =
-            "day available";
-
+    for(let d=1; d<=totalDays; d++){
+        const el = document.createElement("div");
+        el.className = "day available";
         el.textContent = d;
-
 
         if(
             selectedDate &&
@@ -1834,24 +1761,14 @@ function renderCalendar(){
             selectedDate.month === currentMonth &&
             selectedDate.year === currentYear
         ){
-
-            el.classList.add(
-                "selected"
-            );
-
+            el.classList.add("selected");
         }
 
-
-        el.onclick =
-            function(){
-
-                selectDate(d);
-
-            };
-
+        el.onclick = function(){
+            selectDate(d);
+        };
 
         days.appendChild(el);
-
     }
 
 }
@@ -1862,35 +1779,24 @@ function renderCalendar(){
 ========================================================= */
 
 function changeMonth(direction){
-
     currentMonth += direction;
 
-
     if(currentMonth < 0){
-
         currentMonth = 11;
         currentYear--;
-
     }
-
 
     if(currentMonth > 11){
-
         currentMonth = 0;
         currentYear++;
-
     }
-
 
     selectedRound = null;
     selectedSeat = null;
 
     renderCalendar();
-
     renderRounds();
-
     updateSummary();
-
 }
 
 
@@ -1899,29 +1805,18 @@ function changeMonth(direction){
 ========================================================= */
 
 function selectDate(day){
-
     selectedDate = {
-
-        date:day,
-
-        month:currentMonth,
-
-        year:currentYear
-
+        date: day,
+        month: currentMonth,
+        year: currentYear
     };
 
-
     selectedRound = null;
-
     selectedSeat = null;
 
-
     renderCalendar();
-
     renderRounds();
-
     updateSummary();
-
 }
 
 
@@ -1930,50 +1825,19 @@ function selectDate(day){
 ========================================================= */
 
 function getThaiDate(){
-
     if(!selectedDate){
-
         return "กรุณาเลือกวันที่";
-
     }
 
-
-    const d =
-        new Date(
-            selectedDate.year,
-            selectedDate.month,
-            selectedDate.date
-        );
-
-
-    const weekdays = [
-
-        "อาทิตย์",
-        "จันทร์",
-        "อังคาร",
-        "พุธ",
-        "พฤหัสบดี",
-        "ศุกร์",
-        "เสาร์"
-
-    ];
-
+    const d = new Date(selectedDate.year, selectedDate.month, selectedDate.date);
+    const weekdays = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"];
 
     return (
-
-        "วัน"
-        + weekdays[d.getDay()]
-        + " "
-        + selectedDate.date
-        + " "
-        + THAI_MONTHS[
-            selectedDate.month
-        ]
-        + " "
-        + (selectedDate.year + 543)
-
+        "วัน" + weekdays[d.getDay()] + " " +
+        selectedDate.date + " " +
+        THAI_MONTHS[selectedDate.month] + " " +
+        (selectedDate.year + 543)
     );
-
 }
 
 
@@ -1983,211 +1847,95 @@ function getThaiDate(){
 
 function renderRounds(){
 
-    const container =
-        document.getElementById(
-            "roundList"
-        );
-
-
+    const container = document.getElementById("roundList");
     container.innerHTML = "";
 
+    SDP_ROUNDS.forEach(function(round){
 
-    SDP_ROUNDS.forEach(
-        function(round){
+        if(!round.enabled){
+            return;
+        }
 
-            if(!round.enabled){
+        const available = round.seats.filter(s => s.status === "available").length;
+
+        let statusText;
+        let statusClass;
+
+        if(available === 0){
+            statusText = "เต็ม";
+            statusClass = "status-red";
+        }
+        else if(available === 1){
+            statusText = "ว่าง 1 ที่นั่ง";
+            statusClass = "status-orange";
+        }
+        else{
+            statusText = "ว่าง " + available + " ที่นั่ง";
+            statusClass = "status-green";
+        }
+
+        const el = document.createElement("div");
+        el.className = "round";
+
+        if(selectedRound && selectedRound.id === round.id){
+            el.classList.add("selected-round");
+        }
+
+        el.innerHTML = `
+            <div class="round-time">
+                ${round.start} น.
+                <span>ถึง ${round.end} น.</span>
+            </div>
+
+            <div class="seats">
+                ${renderSeats(round)}
+            </div>
+
+            <div class="round-status ${statusClass}">
+                ${statusText}
+            </div>
+
+            <div class="arrow">
+                ${selectedRound && selectedRound.id === round.id ? "⌃" : "⌄"}
+            </div>
+        `;
+
+        container.appendChild(el);
+
+        const buttons = el.querySelectorAll(".seat");
+        buttons.forEach(function(button){
+            button.onclick = function(event){
+                event.stopPropagation();
+                selectSeat(round, button.dataset.seat);
+            };
+        });
+
+        el.onclick = function(){
+            if(available === 0){
+                Swal.fire({
+                    icon:"warning",
+                    title:"รอบนี้เต็มแล้ว",
+                    text:"กรุณาเลือกรอบเวลาอื่น",
+                    confirmButtonText:"ตกลง",
+                    confirmButtonColor:"#e9232d"
+                });
                 return;
             }
 
-
-            const available =
-                round.seats.filter(
-                    s =>
-                    s.status ===
-                    "available"
-                ).length;
-
-
-            let statusText;
-
-            let statusClass;
-
-
-            if(available === 0){
-
-                statusText = "เต็ม";
-
-                statusClass =
-                    "status-red";
-
-            }
-            else if(available === 1){
-
-                statusText =
-                    "ว่าง 1 ที่นั่ง";
-
-                statusClass =
-                    "status-orange";
-
+            if(selectedRound && selectedRound.id === round.id){
+                selectedRound = null;
+                selectedSeat = null;
             }
             else{
-
-                statusText =
-                    "ว่าง "
-                    + available
-                    + " ที่นั่ง";
-
-                statusClass =
-                    "status-green";
-
+                selectedRound = round;
+                selectedSeat = null;
             }
 
+            renderRounds();
+            updateSummary();
+        };
 
-            const el =
-                document.createElement(
-                    "div"
-                );
-
-
-            el.className =
-                "round";
-
-
-            if(
-                selectedRound &&
-                selectedRound.id === round.id
-            ){
-
-                el.classList.add(
-                    "selected-round"
-                );
-
-            }
-
-
-            el.innerHTML = `
-
-                <div class="round-time">
-
-                    ${round.start} น.
-
-                    <span>
-                        ถึง ${round.end} น.
-                    </span>
-
-                </div>
-
-
-                <div class="seats">
-
-                    ${renderSeats(round)}
-
-                </div>
-
-
-                <div class="round-status ${statusClass}">
-
-                    ${statusText}
-
-                </div>
-
-
-                <div class="arrow">
-
-                    ${
-                        selectedRound &&
-                        selectedRound.id === round.id
-                        ? "⌃"
-                        : "⌄"
-                    }
-
-                </div>
-
-            `;
-
-
-            container.appendChild(el);
-
-
-            const buttons =
-                el.querySelectorAll(
-                    ".seat"
-                );
-
-
-            buttons.forEach(
-                function(button){
-
-                    button.onclick =
-                        function(event){
-
-                            event.stopPropagation();
-
-                            selectSeat(
-                                round,
-                                button.dataset.seat
-                            );
-
-                        };
-
-                }
-            );
-
-
-            el.onclick =
-                function(){
-
-                    if(available === 0){
-
-                        Swal.fire({
-
-                            icon:"warning",
-
-                            title:"รอบนี้เต็มแล้ว",
-
-                            text:
-                                "กรุณาเลือกรอบเวลาอื่น",
-
-                            confirmButtonText:
-                                "ตกลง",
-
-                            confirmButtonColor:
-                                "#e9232d"
-
-                        });
-
-                        return;
-
-                    }
-
-
-                    if(
-                        selectedRound &&
-                        selectedRound.id === round.id
-                    ){
-
-                        selectedRound = null;
-
-                        selectedSeat = null;
-
-                    }
-                    else{
-
-                        selectedRound = round;
-
-                        selectedSeat = null;
-
-                    }
-
-
-                    renderRounds();
-
-                    updateSummary();
-
-                };
-
-        }
-    );
+    });
 
 }
 
@@ -2197,74 +1945,31 @@ function renderRounds(){
 ========================================================= */
 
 function renderSeats(round){
+    return round.seats.map(function(seat){
+        const booked = seat.status === "booked";
+        const selected = selectedRound && selectedRound.id === round.id && selectedSeat === seat.id;
 
-    return round.seats.map(
-        function(seat){
+        let className = "seat";
+        if(booked){ className += " booked"; }
+        if(selected){ className += " selected"; }
 
-            const booked =
-                seat.status ===
-                "booked";
-
-
-            const selected =
-                selectedRound &&
-                selectedRound.id === round.id &&
-                selectedSeat === seat.id;
-
-
-            let className =
-                "seat";
-
-
-            if(booked){
-
-                className +=
-                    " booked";
-
-            }
-
-
-            if(selected){
-
-                className +=
-                    " selected";
-
-            }
-
-
-            return `
-
-                <button
-                    class="${className}"
-                    data-seat="${seat.id}"
-                    ${booked ? "disabled" : ""}
+        return `
+            <button
+                class="${className}"
+                data-seat="${seat.id}"
+                ${booked ? "disabled" : ""}
+            >
+                <img
+                    class="seat-image"
+                    src="${CHAIR_IMAGE}"
+                    alt="เก้าอี้ ${seat.id}"
                 >
-
-                    <img
-                        class="seat-image"
-                        src="${CHAIR_IMAGE}"
-                        alt="เก้าอี้ ${seat.id}"
-                    >
-
-                    <div class="seat-label">
-
-                        ${
-                            selected
-                            ? "เลือกแล้ว"
-                            : booked
-                            ? "จองแล้ว"
-                            : "เก้าอี้ " + seat.id
-                        }
-
-                    </div>
-
-                </button>
-
-            `;
-
-        }
-    ).join("");
-
+                <div class="seat-label">
+                    ${selected ? "เลือกแล้ว" : booked ? "จองแล้ว" : "เก้าอี้ " + seat.id}
+                </div>
+            </button>
+        `;
+    }).join("");
 }
 
 
@@ -2272,37 +1977,18 @@ function renderSeats(round){
    SELECT SEAT
 ========================================================= */
 
-function selectSeat(
-    round,
-    seatId
-){
+function selectSeat(round, seatId){
+    const seat = round.seats.find(s => s.id === seatId);
 
-    const seat =
-        round.seats.find(
-            s =>
-            s.id === seatId
-        );
-
-
-    if(
-        !seat ||
-        seat.status === "booked"
-    ){
-
+    if(!seat || seat.status === "booked"){
         return;
-
     }
 
-
     selectedRound = round;
-
     selectedSeat = seatId;
 
-
     renderRounds();
-
     updateSummary();
-
 }
 
 
@@ -2311,40 +1997,11 @@ function selectSeat(
 ========================================================= */
 
 function updateSummary(){
+    document.getElementById("summaryDate").textContent = getThaiDate();
+    document.getElementById("summaryTime").textContent = selectedRound ? selectedRound.start + " - " + selectedRound.end + " น." : "กรุณาเลือกรอบ";
 
-    document.getElementById(
-        "summaryDate"
-    ).textContent =
-        getThaiDate();
-
-
-    document.getElementById(
-        "summaryTime"
-    ).textContent =
-
-        selectedRound
-
-        ? selectedRound.start
-          + " - "
-          + selectedRound.end
-          + " น."
-
-        : "กรุณาเลือกรอบ";
-
-
-    const btn =
-        document.getElementById(
-            "nextBtn"
-        );
-
-
-    btn.disabled =
-        !(
-            selectedDate &&
-            selectedRound &&
-            selectedSeat
-        );
-
+    const btn = document.getElementById("nextBtn");
+    btn.disabled = !(selectedDate && selectedRound && selectedSeat);
 }
 
 
@@ -2353,162 +2010,54 @@ function updateSummary(){
 ========================================================= */
 
 function startBooking(){
-
-    if(
-        !selectedDate ||
-        !selectedRound ||
-        !selectedSeat
-    ){
-
+    if(!selectedDate || !selectedRound || !selectedSeat){
         Swal.fire({
-
             icon:"warning",
-
             title:"กรุณาเลือกข้อมูลให้ครบ",
-
-            text:
-                "กรุณาเลือกวันที่ รอบเวลา และเก้าอี้",
-
-            confirmButtonText:
-                "ตกลง",
-
-            confirmButtonColor:
-                "#e9232d"
-
+            text:"กรุณาเลือกวันที่ รอบเวลา และเก้าอี้",
+            confirmButtonText:"ตกลง",
+            confirmButtonColor:"#e9232d"
         });
-
         return;
-
     }
 
-
     Swal.fire({
-
         icon:"question",
-
         title:"ยืนยันการจอง",
-
         html:`
-
-            <div
-                style="
-                    text-align:left;
-                    line-height:1.9;
-                ">
-
-                <b>🩸 ประเภท</b><br>
-                บริจาคเกล็ดเลือด (SDP)
-
-                <br>
-
-                <b>📅 วันที่</b><br>
-                ${getThaiDate()}
-
-                <br>
-
-                <b>🕐 เวลา</b><br>
-                ${selectedRound.start}
-                -
-                ${selectedRound.end}
-                น.
-
-                <br>
-
-                <b>🪑 เก้าอี้</b><br>
-                ${selectedSeat}
-
-                <br>
-
-                <b>📍 สถานที่</b><br>
-                ธนาคารเลือด โรงพยาบาลยะลา
-
+            <div style="text-align:left; line-height:1.9;">
+                <b>🩸 ประเภท</b><br>บริจาคเกล็ดเลือด (SDP)<br>
+                <b>📅 วันที่</b><br>${getThaiDate()}<br>
+                <b>🕐 เวลา</b><br>${selectedRound.start} - ${selectedRound.end} น.<br>
+                <b>🪑 เก้าอี้</b><br>${selectedSeat}<br>
+                <b>📍 สถานที่</b><br>ธนาคารเลือด โรงพยาบาลยะลา
             </div>
-
         `,
-
         showCancelButton:true,
-
-        confirmButtonText:
-            "✓ ยืนยันการจอง",
-
-        cancelButtonText:
-            "ยกเลิก",
-
-        confirmButtonColor:
-            "#e9232d",
-
-        cancelButtonColor:
-            "#999",
-
+        confirmButtonText:"✓ ยืนยันการจอง",
+        cancelButtonText:"ยกเลิก",
+        confirmButtonColor:"#e9232d",
+        cancelButtonColor:"#999",
         reverseButtons:true
-
-    }).then(
-        function(result){
-
-            if(result.isConfirmed){
-
-                saveBooking();
-
-            }
-
+    }).then(function(result){
+        if(result.isConfirmed){
+            saveBooking();
         }
-    );
-
+    });
 }
 
 
 /* =========================================================
    SAVE BOOKING
-
-   ตอนนี้เป็น Demo
-
-   จุดนี้พร้อมต่อกับ GAS:
-
-   google.script.run
-       .withSuccessHandler(...)
-       .withFailureHandler(...)
-       .saveSDPBooking(...)
-
 ========================================================= */
 
 function saveBooking(){
-
-    /*
-    ========================================================
-    ตัวอย่างเมื่อเชื่อม GAS จริง
-
-    google.script.run
-        .withSuccessHandler(function(result){
-
-            showBookingSuccess();
-
-        })
-        .withFailureHandler(function(error){
-
-            Swal.fire({
-                icon:"error",
-                title:"ไม่สามารถจองได้",
-                text:error.message
-            });
-
-        })
-        .saveSDPBooking({
-            date:selectedDate,
-            roundId:selectedRound.id,
-            seatId:selectedSeat
-        });
-
-    ========================================================
-    */
-
-
     showBookingSuccess();
-
 }
 
 
 /* =========================================================
-   SUCCESS + BADGE ADVICE
+   SUCCESS + BADGE ADVICE (UPDATED 4-COL UI)
 ========================================================= */
 
 function showBookingSuccess(){
@@ -2516,15 +2065,9 @@ function showBookingSuccess(){
     Swal.fire({
 
         width:520,
-
         showConfirmButton:true,
-
-        confirmButtonText:
-            "รับทราบ",
-
-        confirmButtonColor:
-            "#e9232d",
-
+        confirmButtonText:"รับทราบ",
+        confirmButtonColor:"#e9232d",
         allowOutsideClick:false,
 
         html:`
@@ -2532,148 +2075,55 @@ function showBookingSuccess(){
             <div>
 
                 <!-- SUCCESS BADGE -->
-
                 <div class="success-badge">
-
                     ✓ จองสำเร็จ
-
                 </div>
 
-
-                <div
-                    style="
-                        font-size:21px;
-                        font-weight:900;
-                        margin-bottom:6px;
-                    ">
-
+                <div style="font-size:21px; font-weight:900; margin-bottom:6px;">
                     จองบริจาคเกล็ดเลือดสำเร็จ
-
                 </div>
 
-
-                <div
-                    style="
-                        color:#666;
-                        margin-bottom:15px;
-                    ">
-
-                    ระบบบันทึกการจองของท่าน
-                    เรียบร้อยแล้ว
-
+                <div style="color:#666; margin-bottom:15px;">
+                    ระบบบันทึกการจองของท่าน เรียบร้อยแล้ว
                 </div>
-
 
                 <!-- BOOKING SUMMARY -->
-
-                <div
-                    style="
-                        background:#fff8f8;
-                        border-radius:15px;
-                        padding:12px;
-                        text-align:left;
-                        border:1px solid #ffe3e3;
-                    ">
-
-                    <div>
-                        🩸
-                        <b>ประเภท:</b>
-                        บริจาคเกล็ดเลือด (SDP)
-                    </div>
-
-                    <div>
-                        📅
-                        <b>วันที่:</b>
-                        ${getThaiDate()}
-                    </div>
-
-                    <div>
-                        🕐
-                        <b>เวลา:</b>
-                        ${selectedRound.start}
-                        -
-                        ${selectedRound.end}
-                        น.
-                    </div>
-
-                    <div>
-                        🪑
-                        <b>เก้าอี้:</b>
-                        ${selectedSeat}
-                    </div>
-
-                    <div>
-                        📍
-                        <b>สถานที่:</b>
-                        ธนาคารเลือด โรงพยาบาลยะลา
-                    </div>
-
+                <div style="background:#fff8f8; border-radius:15px; padding:12px; text-align:left; border:1px solid #ffe3e3;">
+                    <div>🩸 <b>ประเภท:</b> บริจาคเกล็ดเลือด (SDP)</div>
+                    <div>📅 <b>วันที่:</b> ${getThaiDate()}</div>
+                    <div>🕐 <b>เวลา:</b> ${selectedRound.start} - ${selectedRound.end} น.</div>
+                    <div>🪑 <b>เก้าอี้:</b> ${selectedSeat}</div>
+                    <div>📍 <b>สถานที่:</b> ธนาคารเลือด โรงพยาบาลยะลา</div>
                 </div>
 
-
-                <!-- OLD BADGE STYLE MOVED HERE -->
-
+                <!-- NEW ADVICE BOX (4 COLUMNS) -->
                 <div class="advice-box">
 
                     <div class="advice-title">
-
                         💡 คำแนะนำก่อนบริจาค
-
                     </div>
 
+                    <div class="advice-grid">
 
-                    <div class="advice-item">
+                        <div class="advice-col">
+                            <div class="advice-emoji">🥛</div>
+                            <div class="advice-desc">ดื่มน้ำ 3-4 แก้ว ก่อนบริจาค</div>
+                        </div>
 
-                        <span class="advice-icon">
-                            ✓
-                        </span>
+                        <div class="advice-col">
+                            <div class="advice-emoji">🍽️</div>
+                            <div class="advice-desc">รับประทานอาหาร ก่อนบริจาค 1-2 ชม.</div>
+                        </div>
 
-                        <span>
-                            ดื่มน้ำให้เพียงพอ
-                            ก่อนเข้ารับการบริจาค
-                        </span>
+                        <div class="advice-col">
+                            <div class="advice-emoji">🌙</div>
+                            <div class="advice-desc">พักผ่อนให้เพียงพอ นอนหลับ 6-8 ชม.</div>
+                        </div>
 
-                    </div>
-
-
-                    <div class="advice-item">
-
-                        <span class="advice-icon">
-                            ✓
-                        </span>
-
-                        <span>
-                            รับประทานอาหารตามปกติ
-                            ก่อนมาบริจาค
-                        </span>
-
-                    </div>
-
-
-                    <div class="advice-item">
-
-                        <span class="advice-icon">
-                            ✓
-                        </span>
-
-                        <span>
-                            พักผ่อนให้เพียงพอ
-                            ก่อนวันนัดหมาย
-                        </span>
-
-                    </div>
-
-
-                    <div class="advice-item">
-
-                        <span class="advice-icon">
-                            ✓
-                        </span>
-
-                        <span>
-                            สวมเสื้อผ้าที่สะดวก
-                            ต่อการบริจาค
-                        </span>
+                        <div class="advice-col">
+                            <div class="advice-emoji">👕</div>
+                            <div class="advice-desc">สวมเสื้อแขนสั้น หรือเสื้อที่สะดวก</div>
+                        </div>
 
                     </div>
 
