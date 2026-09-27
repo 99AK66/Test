@@ -1,4 +1,3675 @@
 <!DOCTYPE html>
+<html>
+  <head>
+      <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Password</title>
+    <base target="_top">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+      integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+      integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <!-- ✅ SweetAlert2 (สำคัญที่สุด) -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+:root {
+      --font-main: 'Kanit', sans-serif;
+      --color-bg: #1e1e2f;
+      --color-panel: #2c2c3c;
+      --color-primary: #00bcd4;
+      --color-primary-dark: #0097a7;
+      --color-accent: #2563eb;
+      --color-accent-hover: #1d4ed8;
+      --color-success: #16a34a;
+      --color-success-dark: #15803d;
+      --color-neutral: #d1d5db;
+      --color-neutral-dark: #9ca3af;
+      --color-text: #ffffff;
+      --color-placeholder: #aaaaaa;
+      --radius: 12px;
+      --shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 6px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    body {
+      font-family: var(--font-main);
+      background: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+      color: var(--color-text);
+    }
+
+    .container {
+      min-height: 100vh;
+    }
+
+    .swal2-popup {
+      font-family: var(--font-main);
+      background-color: var(--color-bg) !important;
+      color: var(--color-text) !important;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      width: 700px !important;
+      max-width: 100% !important;
+    }
+
+    .swal2-input {
+      border-radius: 8px;
+      padding: 12px;
+      background-color: var(--color-panel);
+      color: var(--color-text);
+      border: 1px solid #444;
+    }
+
+    .swal2-input::placeholder {
+      color: var(--color-placeholder);
+      width: 100%; 
+    }
+
+    .swal2-form-group {
+      margin-bottom: 15px;
+      text-align: left;
+      max-width: 400px;
+    }
+
+    .swal2-form-group label {
+      display: block;
+      margin-bottom: 5px;
+      color: #ccc;
+    }
+
+    .swal2-confirm,
+    .swal2-deny,
+    .swal2-cancel {
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-weight: bold;
+      transition: transform 0.2s ease, background-color 0.3s ease;
+    }
+
+    .swal2-confirm {
+      background-color: var(--color-accent);
+      color: white;
+    }
+
+    .swal2-deny {
+      background-color: var(--color-success);
+      color: white;
+    }
+
+    .swal2-cancel {
+      background-color: var(--color-neutral);
+      color: black;
+    }
+
+    .swal2-confirm:hover {
+      background-color: var(--color-accent-hover);
+    }
+
+    .swal2-deny:hover {
+      background-color: var(--color-success-dark);
+    }
+
+    .swal2-cancel:hover {
+      background-color: var(--color-neutral-dark);
+    }
+
+    .swal2-confirm:active,
+    .swal2-deny:active,
+    .swal2-cancel:active {
+      transform: scale(1.1);
+    }
+
+    .slide-card {
+      cursor: pointer;
+      padding: 30px;
+      font-size: 1.3rem;
+      background: var(--color-panel);
+      color: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-align: center;
+    }
+
+    .slide-card:hover {
+      transform: scale(1.05);
+      box-shadow: var(--shadow-hover);
+    }
+
+    /* ✅ CSS สำหรับ progress bar ตาม icon */
+.swal2-popup.swal2-icon-success .swal2-timer-progress-bar {
+  background-color: #28a745 !important;
+}
+.swal2-popup.swal2-icon-error .swal2-timer-progress-bar {
+  background-color: #dc3545 !important;
+}
+.swal2-popup.swal2-icon-warning .swal2-timer-progress-bar {
+  background-color: #ffc107 !important;
+}
+.swal2-popup.swal2-icon-info .swal2-timer-progress-bar {
+  background-color: #0dcaf0 !important;
+}
+.swal2-popup.swal2-icon-question .swal2-timer-progress-bar {
+  background-color: #6f42c1 !important;
+}
+.swal2-timer-progress-bar {
+  background-color: gray !important;
+}
+
+.welcome-box:hover {
+  transform: scale(1.02);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes bounceOnce {
+  0%   { transform: translateY(0); }
+  30%  { transform: translateY(-15px); }
+  50%  { transform: translateY(0); }
+  70%  { transform: translateY(-7px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes bounceHover {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+.swal2-icon-custom {
+  font-size: 1.5rem;
+  animation: bounceOnce 1.2s ease forwards;
+  cursor: pointer; /* เปลี่ยน cursor เมื่อ hover */
+}
+
+.swal2-icon-custom:hover {
+  animation: bounceHover 0.6s ease infinite;
+}
+
+.swal2-image {
+  border: none;
+  box-shadow: none;
+  border-radius: 8px; /* หรือใช้ 50% ถ้าต้องการให้เป็นวงกลม */
+}
+
+  .lds-wave {
+    display: inline-block;
+    width: 80px;
+    height: 20px;
+  }
+  .lds-wave div {
+    display: inline-block;
+    width: 8px;
+    height: 100%;
+    margin: 0 2px;
+    background: #3085d6;
+    animation: lds-wave 1.2s infinite ease-in-out;
+  }
+  .lds-wave div:nth-child(1) { animation-delay: -1.1s; }
+  .lds-wave div:nth-child(2) { animation-delay: -1.0s; }
+  .lds-wave div:nth-child(3) { animation-delay: -0.9s; }
+  .lds-wave div:nth-child(4) { animation-delay: -0.8s; }
+  .lds-wave div:nth-child(5) { animation-delay: -0.7s; }
+
+  @keyframes lds-wave {
+    0%, 40%, 100% {
+      transform: scaleY(0.4);
+    } 20% {
+      transform: scaleY(1.0);
+    }
+  }
+
+.welcome-box {
+  background: linear-gradient(145deg, #9AA090, #9AA090);
+  padding: 30px 40px;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  max-width: 600px;
+  text-align: center;
+  border: 1px solid #ddd;
+  transition: all 0.3s ease-in-out;
+
+  /* ✅ เพิ่มสีข้อความให้ชัดใน light mode */
+  color: #f2eddd;
+  background-color: #9AA090;
+}
+
+@media (prefers-color-scheme: dark) {
+  .welcome-box {
+    color: #f1f1f1;
+    background-color: #1e1e1e;
+  }
+}
+
+
+/* =====================================================
+   OTP — ช่องรหัสยืนยัน 6 ช่อง
+===================================================== */
+
+.otp-label {
+  display: block;
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+  color: #ccc;
+  line-height: 1.4;
+}
+
+.otp-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  margin: 0 auto 8px auto;
+  box-sizing: border-box;
+}
+
+.otp-box {
+  width: 42px;
+  height: 52px;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 700;
+
+  border-radius: 8px;
+  border: 1px solid #444;
+
+  background-color: #2c2c3c;
+  color: #fff;
+
+  box-sizing: border-box;
+  flex: 0 0 42px;
+}
+
+.otp-box:focus {
+  border-color: #00bcd4;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 188, 212, 0.6);
+}
+
+
+/* =====================================================
+   SweetAlert — ฟอร์มค้นหา
+===================================================== */
+
+.no-email-search-popup {
+  width: min(92vw, 420px) !important;
+  max-height: 92vh !important;
+  overflow: hidden !important;
+  margin: auto !important;
+  box-sizing: border-box !important;
+}
+
+.no-email-search-html {
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.no-email-search-title {
+  font-size: 1.15rem !important;
+  margin-bottom: 8px !important;
+}
+
+.no-email-search-actions {
+  margin-top: 14px !important;
+}
+
+
+/* =====================================================
+   มือถือจอเล็ก
+===================================================== */
+
+@media (max-width: 380px) {
+
+  .otp-container {
+    gap: 5px;
+  }
+
+  .otp-box {
+    width: 37px;
+    height: 48px;
+    flex: 0 0 37px;
+    font-size: 1.25rem;
+  }
+
+  .no-email-search-popup {
+    width: 94vw !important;
+  }
+
+}
+/* =====================================================
+   SweetAlert — Download PDF Mobile UI
+===================================================== */
+
+.pdf-mobile-popup {
+  width: min(92vw, 420px) !important;
+  max-height: 92vh !important;
+  margin: auto !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+.pdf-mobile-title {
+  font-size: 1.15rem !important;
+  margin-bottom: 8px !important;
+}
+
+.pdf-mobile-html {
+  font-size: 0.9rem !important;
+  line-height: 1.55 !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+}
+
+.pdf-mobile-actions {
+  margin-top: 14px !important;
+}
+
+.pdf-mobile-text {
+  margin: 0;
+  text-align: center;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+
+/* =====================================================
+   มือถือจอเล็ก
+===================================================== */
+
+@media (max-width: 380px) {
+
+  .pdf-mobile-popup {
+    width: 94vw !important;
+  }
+
+  .pdf-mobile-title {
+    font-size: 1.05rem !important;
+  }
+
+  .pdf-mobile-html {
+    font-size: 0.85rem !important;
+  }
+
+}
+
+/* =====================================================
+   ปุ่ม SweetAlert[ 📄 ดาวน์โหลดอีกครั้ง ] [ ↩️ กลับเมนูหลัก ] — ให้อยู่บรรทัดเดียวกัน
+===================================================== */
+
+.pdf-mobile-actions {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: nowrap !important;
+  width: 100% !important;
+}
+
+.pdf-mobile-actions .swal2-styled {
+  margin: 0 !important;
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  white-space: nowrap !important;
+  font-size: 0.85rem !important;
+  padding: 10px 8px !important;
+}
+
+
+/* มือถือจอเล็กมาก */
+@media (max-width: 380px) {
+
+  .pdf-mobile-actions {
+    gap: 6px !important;
+  }
+
+  .pdf-mobile-actions .swal2-styled {
+    font-size: 0.78rem !important;
+    padding: 9px 5px !important;
+  }
+
+}
+
+/* =====================================================
+   GPS / Location SweetAlert — Mobile UI
+===================================================== */
+
+.gps-mobile-popup {
+  width: min(92vw, 420px) !important;
+  max-height: 92vh !important;
+  margin: auto !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+.gps-mobile-title {
+  font-size: 1.15rem !important;
+  margin-bottom: 8px !important;
+}
+
+.gps-mobile-html {
+  font-size: 0.9rem !important;
+  line-height: 1.6 !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.gps-mobile-actions {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: nowrap !important;
+  width: 100% !important;
+}
+
+.gps-mobile-actions .swal2-styled {
+  margin: 0 !important;
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  white-space: nowrap !important;
+  font-size: 0.85rem !important;
+  padding: 10px 8px !important;
+}
+
+
+/* =====================================================
+   มือถือจอเล็ก
+===================================================== */
+
+@media (max-width: 380px) {
+
+  .gps-mobile-popup {
+    width: 94vw !important;
+  }
+
+  .gps-mobile-title {
+    font-size: 1.05rem !important;
+  }
+
+  .gps-mobile-html {
+    font-size: 0.84rem !important;
+  }
+
+  .gps-mobile-actions {
+    gap: 6px !important;
+  }
+
+  .gps-mobile-actions .swal2-styled {
+    font-size: 0.78rem !important;
+    padding: 9px 5px !important;
+  }
+
+}
+
+
+/* ปรับแต่ง SweetAlert2 ให้ใช้งานบนมือถือได้พอดีจอ */
+@media (max-width: 600px) {
+  .swal2-mobile-popup {
+    width: 92% !important;
+    padding: 1rem !important;
+    font-size: 0.9rem !important;
+  }
+  .swal2-input {
+    height: 42px !important;
+    font-size: 14px !important;
+  }
+}
+
+    </style>
+  </head>
+
+  <body>  
+
+    <div class="container d-flex align-items-center justify-content-center min-vh-100">
+  <div id="p1" class="welcome-box" style="display:none">
+    <center>
+      <img class="d-block mx-auto sm-3"
+        src="https://lh3.googleusercontent.com/d/127G8tNwhBd1y_JYvj9M4aSvmzjbuPfCr" width="100" height="100">
+      <div id="welcome-message" class="mt-3"></div>
+    </center>
+  </div>
+</div>
+
+<div class="text-center">
+  <pre style="
+    font-family: monospace;
+    white-space: pre;
+    font-size: 12px;
+    line-height: 1.3;
+    margin: 12px auto;
+    font-weight: normal;
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    text-align: center;
+    color: #00e0ff;
+    text-shadow:
+      0 0 1px #00e0ff,
+      0 0 3px #00e0ff,
+      0 0 6px rgba(0, 224, 255, 0.5);
+  ">
+ █████╗ ██╗  ██╗
+██╔══██╗██║ ██╔╝
+███████║99AK66╔╝ 
+██╔══██║██╔═██╗ 
+██║  ██║██║  ██╗
+╚═╝  ╚═╝╚═╝  ╚═╝ 
+        
+  Anas Kado — Senior Medical Technologist
+  Blood Bank, Yala Hospital (2013–Present)
+  The Last Dance
+  </pre>
+</div>
+
+    <script>
+
+let failedLoginAttempts = 0;
+// ตัวแปรเก็บสถานะสร้างรหัสผ่านอัตโนมัติ
+let isAutoPassword = false;
+
+
+// ✅ แบบเปิดใช้งานได้ทันที
+window.addEventListener('load', function () {
+  const savedLockoutTime = localStorage.getItem('lockoutTime');
+
+  if (savedLockoutTime && Date.now() < parseInt(savedLockoutTime, 10)) {
+    handleLockout();
+    return;
+  }
+
+  showMenu();
+}); 
+async function handleLockout() {
+  // เซ็ตเวลา lockout 5 นาทีใน localStorage
+  if (!localStorage.getItem('lockoutTime')) {
+    const countdownTime = 10 * 60 * 1000; // 10 นาที
+    const endTime = Date.now() + countdownTime;
+    localStorage.setItem('lockoutTime', endTime);
+  }
+  const endTime = parseInt(localStorage.getItem('lockoutTime'), 10);
+
+  let countdown = setInterval(() => {
+    let remainingTime = endTime - Date.now();
+
+    if (remainingTime <= 0) {
+      clearInterval(countdown);
+      localStorage.removeItem('lockoutTime');
+      Swal.close();
+      failedLoginAttempts = 0; // รีเซ็ตจำนวนครั้งผิด
+      showLogin(); // เปิดฟอร์มล็อกอินใหม่ให้กรอก
+      return;
+    }
+
+    const minutes = Math.floor(remainingTime / 60000);
+    const seconds = Math.floor((remainingTime % 60000) / 1000);
+
+    Swal.update({
+      html: `กรอกรหัสผ่านอีกครั้งภายหลัง <span style="color:#f44336">${minutes}</span> นาที <span style="color:#f44336">${seconds}</span> วินาที`
+    });
+  }, 1000);
+
+  await Swal.fire({
+    position: 'center',
+    icon: 'error',
+    title: 'กรอกรหัสผิดเกินกำหนด',
+    html: `กรอกรหัสผ่านอีกครั้งภายหลัง 10 นาที`,
+    timerProgressBar: true,
+    allowOutsideClick: false,
+    showConfirmButton: false,
+    timer: 10 * 60 * 1000, // 10 นาที
+    didOpen: () => {
+      Swal.showLoading();
+    },
+    willClose: () => {
+      clearInterval(countdown);
+    }
+  });
+}
+
+async function showMenu() {
+await Swal.fire({
+  title: '<span class="blood-title">ธนาคารเลือด</span>',
+
+html: `
+<style>
+  @keyframes ecgPulse {
+    0% {
+      stroke-dashoffset: 1000;
+    }
+    100% {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  /* =========================
+     Blood Bleeding Text Effect (ค่อยๆซึมจากขาวเป็นแดง)
+     ========================= */
+  @keyframes bloodBleed {
+    0% {
+      color: #ffffff;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.5), 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+    50% {
+      color: #ff3333;
+      text-shadow: 0 0 10px rgba(255, 0, 0, 0.8), 0 4px 12px rgba(139, 0, 0, 0.7), 0 8px 20px rgba(100, 0, 0, 0.5);
+    }
+    100% {
+      color: #ffffff;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.5), 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  .blood-title {
+    font-weight: bold;
+    position: relative;
+    display: inline-block;
+    animation: bloodBleed 4s ease-in-out infinite;
+  }
+
+  /* =========================
+     Layout เมนู — การ์ดจริงแบบเต็มความกว้าง
+     ========================= */
+  #slide-options {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  /* ปุ่มเมนูหลัก (button จริง ไม่ใช่ div) */
+  .menu-card {
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    padding: 16px 16px 16px 14px;
+    border-radius: 18px;
+    border: 2px solid transparent;
+    background-color: #ffffff;
+
+    font-family: inherit;
+    text-align: left;
+    color: #333;
+
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease,
+      background-color 0.25s ease;
+
+    user-select: none;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  .menu-card:active {
+    transform: scale(0.985);
+  }
+
+  /* วงกลมไอคอน */
+  .menu-icon {
+    flex-shrink: 0;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+  }
+
+  .menu-icon img {
+    width: 26px;
+    height: 26px;
+    display: block;
+  }
+
+  /* เนื้อหาข้อความ */
+  .menu-card-body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .menu-card-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .menu-card-desc {
+    font-size: 0.76rem;
+    font-weight: 400;
+    color: #8a8a8a;
+    line-height: 1.4;
+  }
+
+  /* ปุ่มลูกศรด้านขวา */
+  .menu-arrow {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 16px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  }
+
+  /* =========================
+     ECG (เส้นชีพจรตอน hover)
+     ========================= */
+  .ecg-line {
+    position: absolute;
+    bottom: 4px;
+    left: 8%;
+    width: 84%;
+    height: 22px;
+
+    pointer-events: none;
+    opacity: 0;
+
+    transition: opacity 0.3s ease;
+  }
+
+  .menu-card:hover .ecg-line {
+    opacity: 0.35;
+  }
+
+  .ecg-path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: ecgPulse 2s linear infinite;
+  }
+
+  /* =========================
+     สีของแต่ละปุ่ม
+     ========================= */
+
+  /* เข้าสู่ระบบ — ฟ้า */
+  .menu-card[data-value="login"] {
+    border-color: #a3d5ff;
+    color: #2a6fb6;
+  }
+  .menu-card[data-value="login"] .menu-icon {
+    background: radial-gradient(circle at 35% 30%, #6badf0, #2a6fb6);
+  }
+  .menu-card[data-value="login"] .menu-arrow {
+    background: #2a6fb6;
+  }
+  .menu-card[data-value="login"]:hover {
+    background-color: #eaf4ff;
+    transform: scale(1.02);
+    box-shadow: 0 8px 18px rgba(163, 213, 255, 0.55);
+  }
+
+  /* จองบริจาค SDP — แดง */
+  .menu-card[data-value="sdpBooking"] {
+    border-color: #ffb3ba;
+    color: #c0392b;
+  }
+  .menu-card[data-value="sdpBooking"] .menu-icon {
+    background: radial-gradient(circle at 35% 30%, #f16b73, #c0392b);
+  }
+  .menu-card[data-value="sdpBooking"] .menu-arrow {
+    background: #c0392b;
+  }
+  .menu-card[data-value="sdpBooking"]:hover {
+    background-color: #fff0f0;
+    transform: scale(1.02);
+    box-shadow: 0 8px 18px rgba(255, 179, 186, 0.55);
+  }
+
+  /* ค้นหาผลการบริจาค — เขียวเทอควอยซ์ */
+  .menu-card[data-value="searchNoEmail"] {
+    border-color: #5eead4;
+    color: #0f766e;
+  }
+  .menu-card[data-value="searchNoEmail"] .menu-icon {
+    background: radial-gradient(circle at 35% 30%, #34d0b6, #0f766e);
+  }
+  .menu-card[data-value="searchNoEmail"] .menu-arrow {
+    background: #0f766e;
+  }
+  .menu-card[data-value="searchNoEmail"]:hover {
+    background-color: #ecfdf5;
+    transform: scale(1.02);
+    box-shadow: 0 8px 18px rgba(94, 234, 212, 0.55);
+  }
+
+  /* =========================
+     Logo Styling
+     ========================= */
+  .logo-img {
+    width: 105px;
+    height: 105px;
+    object-fit: contain;
+    border-radius: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    background-color: #ffffff;
+    padding: 4px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .swal2-icon.swal2-icon-custom {
+    border: none !important;
+    background: transparent !important;
+    width: auto !important;
+    height: auto !important;
+    margin: 10px auto 0 !important;
+  }
+
+  /* =========================
+     Mobile
+     ========================= */
+  @media (max-width: 600px) {
+
+    #slide-options {
+      gap: 10px;
+      max-width: 100%;
+    }
+
+    .menu-card {
+      padding: 13px 13px 13px 12px;
+      border-radius: 16px;
+    }
+
+    .menu-icon {
+      width: 46px;
+      height: 46px;
+    }
+
+    .menu-icon img {
+      width: 22px;
+      height: 22px;
+    }
+
+    .menu-card-title {
+      font-size: 0.96rem;
+    }
+
+    .menu-card-desc {
+      font-size: 0.7rem;
+    }
+
+    .menu-arrow {
+      width: 26px;
+      height: 26px;
+      font-size: 14px;
+    }
+  }
+</style>
+
+<div id="slide-options">
+
+  <!-- เข้าสู่ระบบ -->
+  <button type="button" class="menu-card" data-value="login">
+    <span class="menu-icon">
+      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSI+CiAgPGNpcmNsZSBjeD0iMTciIGN5PSIxNyIgcj0iOSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMuNCIvPgogIDxwYXRoIGQ9Ik0yMy41IDIzLjVMNDAgNDAiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzLjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0zMSAzMkwzNiAyNyIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMuNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0iTTM1IDM2TDQwIDMxIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMy40IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9zdmc+Cg==" alt="">
+    </span>
+    <span class="menu-card-body">
+      <span class="menu-card-title">เข้าสู่ระบบ</span>
+      <span class="menu-card-desc">สำหรับผู้บริจาคและเจ้าหน้าที่ที่มีบัญชีแล้ว</span>
+    </span>
+    <span class="menu-arrow">›</span>
+    <svg class="ecg-line" viewBox="0 0 200 40" preserveAspectRatio="none">
+        <path class="ecg-path" d="M0,20 L20,20 L30,5 L40,35 L50,20 L80,20 L90,10 L100,30 L110,20 L200,20" />
+      </svg>
+  </button>
+
+  <!-- จองบริจาค SDP -->
+  <button type="button" class="menu-card" data-value="sdpBooking">
+    <span class="menu-icon">
+      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSI+CiAgPHJlY3QgeD0iNyIgeT0iMTAiIHdpZHRoPSIzNCIgaGVpZ2h0PSIzMCIgcng9IjUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzLjIiLz4KICA8cGF0aCBkPSJNNyAxOUg0MSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMuMiIvPgogIDxwYXRoIGQ9Ik0xNSA2VjEzIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMy4yIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8cGF0aCBkPSJNMzMgNlYxMyIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0iTTI0IDI0QzI0IDI0IDE5IDI5IDE5IDMyLjJDMTkgMzQuOCAyMS4yIDM3IDI0IDM3QzI2LjggMzcgMjkgMzQuOCAyOSAzMi4yQzI5IDI5IDI0IDI0IDI0IDI0WiIgZmlsbD0iI2ZmZmZmZiIvPgo8L3N2Zz4K" alt="">
+    </span>
+    <span class="menu-card-body">
+      <span class="menu-card-title">จองบริจาค SDP</span>
+      <span class="menu-card-desc">จองคิวบริจาคเกล็ดเลือดล่วงหน้า สะดวก รวดเร็ว</span>
+    </span>
+    <span class="menu-arrow">›</span>
+    <svg class="ecg-line" viewBox="0 0 200 40" preserveAspectRatio="none">
+        <path class="ecg-path" d="M0,20 L20,20 L30,5 L40,35 L50,20 L80,20 L90,10 L100,30 L110,20 L200,20" />
+      </svg>
+  </button>
+
+  <!-- ค้นหาผลการบริจาคโลหิต -->
+  <button type="button" class="menu-card" data-value="searchNoEmail">
+    <span class="menu-icon">
+      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSI+CiAgPGNpcmNsZSBjeD0iMjEiIGN5PSIyMSIgcj0iMTIiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzLjQiLz4KICA8cGF0aCBkPSJNMzAgMzBMNDEgNDEiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzLjYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0xNyAyMUMxNyAxOC4yIDE5LjIgMTYgMjIgMTYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIyLjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC42Ii8+Cjwvc3ZnPgo=" alt="">
+    </span>
+    <span class="menu-card-body">
+      <span class="menu-card-title">ค้นหาผลการบริจาคโลหิต</span>
+      <span class="menu-card-desc">สำหรับผู้ไม่มีหรือไม่กรอกอีเมล</span>
+    </span>
+    <span class="menu-arrow">›</span>
+    <svg class="ecg-line" viewBox="0 0 200 40" preserveAspectRatio="none">
+        <path class="ecg-path" d="M0,20 L20,20 L30,5 L40,35 L50,20 L80,20 L90,10 L100,30 L110,20 L200,20" />
+      </svg>
+  </button>
+
+</div>
+`,
+
+    width: '50em',
+    allowOutsideClick: false,
+    showConfirmButton: false,
+    background: '#1e1e2f',
+    color: '#ffffff',
+    iconHtml: '<img src="https://lh3.googleusercontent.com/d/127G8tNwhBd1y_JYvj9M4aSvmzjbuPfCr" class="logo-img" alt="Logo" onerror="this.style.display=\'none\'">',
+    customClass: {
+      popup: 'cool-popup',
+      title: 'cool-title',
+      icon: 'swal2-icon-custom'
+    },
+
+didOpen: () => {
+  const cards = document.querySelectorAll('.menu-card');
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      const action = card.dataset.value;
+      Swal.close();
+
+      if (action === 'login') {
+        showLogin();
+      } else if (action === 'sdpBooking') {
+        // ✅ แสดง loading ระหว่างพาเข้าระบบจอง SDP
+        Swal.fire({
+          title: 'กำลังเข้าสู่ระบบ',
+          html: `
+            <div class="lds-wave">
+              <div></div><div></div><div></div><div></div><div></div>
+            </div>
+            <p class="mt-3">กรุณารอสักครู่</p>
+          `,
+          showConfirmButton: false,
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          customClass: { popup: 'rounded-4 shadow-lg p-3' }
+        });
+        // ✅ เปลี่ยนเป็น window.location.href (ไม่ใช่ window.top)
+        //    เพื่อให้ยังคงอยู่ภายใน iframe ของ GitHub เหมือนหน้าอื่นๆ
+        const baseUrl = 'https://script.google.com/macros/s/AKfycbw0A1i3pUMMrE6swKtj757qNa5o_Ev-6nf8RysOzPEVQOEu6stxAp2xznzjSnjVmxI49g/exec';
+        window.location.href = `${baseUrl}?action=sdpBooking`;
+      } else if (action === 'searchNoEmail') {
+        showNoEmailSearchFlow();
+      }
+    });
+  });
+}
+
+async function showLogin() {
+  const { value: credentials, dismiss } = await Swal.fire({
+    icon: 'question',
+    title: '🔐 เข้าสู่ระบบ',
+    html: `
+      <style>
+        .register-btn {
+          width: 100%;
+          height: 48px;
+          border-radius: 12px;
+          border: 2px solid #ffc6d0;
+          background-color: transparent;
+          color: #e57373;
+          font-weight: 600;
+          font-size: 14px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-sizing: border-box;
+          margin-bottom: 0;
+          transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .register-btn:hover {
+          background-color: #fff0f3;
+          color: #d84343;
+        }
+      </style>
+
+      <div style="width:100%; max-width:380px; margin:0 auto; box-sizing:border-box;">
+        <!-- Email -->
+        <div style="text-align:left; margin-bottom:14px;">
+          <label style="display:block; margin:0 0 7px 3px; font-size:13px; font-weight:600; color:#666;">
+            📧 Email ผู้ใช้
+          </label>
+          <div style="position:relative; width:100%;">
+            <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:17px; z-index:2; pointer-events:none;">
+              ✉️
+            </span>
+            <input id="swal-username" class="swal2-input" placeholder="กรอก Email ของคุณ" style="width:100%; height:52px; box-sizing:border-box; margin:0; padding:0 14px 0 43px; border:1px solid #ddd; border-radius:14px; background:#f8f9fa; color:#222 !important; -webkit-text-fill-color:#222; font-size:16px; font-weight:500; caret-color:#222;">
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div style="text-align:left; margin-bottom:14px;">
+          <label style="display:block; margin:0 0 7px 3px; font-size:13px; font-weight:600; color:#666;">
+            🔑 รหัสผ่าน
+          </label>
+          <div style="position:relative; width:100%;">
+            <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:17px; z-index:2; pointer-events:none;">
+              🔒
+            </span>
+            <input id="swal-password" type="password" class="swal2-input" placeholder="กรอกรหัสผ่าน" style="width:100%; height:52px; box-sizing:border-box; margin:0; padding:0 14px 0 43px; border:1px solid #ddd; border-radius:14px; background:#f8f9fa; color:#222 !important; -webkit-text-fill-color:#222; font-size:16px; font-weight:500; caret-color:#222;">
+          </div>
+        </div>
+
+        <!-- ปุ่ม SweetAlert Placeholder -->
+        <div id="login-buttons-placeholder" style="width:100%; height:0; margin:0; padding:0;"></div>
+
+        <!-- Divider -->
+        <div style="display:flex; align-items:center; gap:10px; margin:18px 0 12px;">
+          <div style="flex:1; height:1px; background:#e5e5e5;"></div>
+          <span style="font-size:12px; color:#aaa; white-space:nowrap;">หรือ</span>
+          <div style="flex:1; height:1px; background:#e5e5e5;"></div>
+        </div>
+
+        <!-- Social Description -->
+        <p style="font-size:12px; color:#999; margin:0 0 12px; text-align:center;">
+          เข้าสู่ระบบด้วยบัญชี
+        </p>
+
+        <!-- Social Buttons -->
+        <div style="display:flex; gap:10px; width:100%;">
+
+
+          <!-- Google -->
+          <button type="button" onclick="loginWithSocial('google')" style="flex:1; min-width:0; height:48px; padding:0 8px; border-radius:12px; border:1px solid #ddd; background:#fff; color:#444; font-weight:600; font-size:13px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; box-sizing:border-box;">
+            <img src="https://www.google.com/favicon.ico" width="18" height="18" alt="Google">
+            <span>Google</span>
+          </button>
+
+          
+          <!-- LINE -->
+          <button type="button" onclick="loginWithSocial('line')" style="flex:1; min-width:0; height:48px; padding:0 8px; border-radius:12px; border:1px solid #06C755; background:#06C755; color:#fff; font-weight:600; font-size:13px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; box-sizing:border-box;">
+            <span style="display:flex; align-items:center; justify-content:center; width:18px; height:18px; border-radius:50%; background:#fff; color:#06C755; font-size:7px; font-weight:900; flex-shrink:0;">LINE</span>
+            <span>LINE</span>
+          </button>
+        </div>
+      </div>
+    `,
+    confirmButtonText: '✅ เข้าสู่ระบบ',
+    showCancelButton: true,
+    cancelButtonText: '↩️ กลับ',
+    allowOutsideClick: false,
+    focusConfirm: false,
+    customClass: { popup: 'rounded-4 shadow-lg' },
+    
+    didOpen: () => {
+      const popup = Swal.getPopup();
+      const actions = popup.querySelector('.swal2-actions');
+      const placeholder = popup.querySelector('#login-buttons-placeholder');
+      
+      if (actions && placeholder) {
+        // สร้างปุ่มลงทะเบียนแบบไม่มีเอฟเฟกต์ เพื่อนำไปวางไว้แถวเดียวกับปุ่ม เข้าสู่ระบบ และ กลับ
+        const registerButton = document.createElement('button');
+        registerButton.type = 'button';
+        registerButton.className = 'register-btn';
+        registerButton.innerHTML = '🪪 ยังไม่มีบัญชี? ลงทะเบียนเข้าใช้งาน';
+        registerButton.onclick = () => {
+          Swal.close();
+          showRegisterChoice();
+        };
+
+        // แทรกปุ่มลงทะเบียนไว้ก่อนปุ่มยืนยัน
+        actions.insertBefore(registerButton, actions.firstChild);
+        placeholder.replaceWith(actions);
+        
+        actions.style.width = '100%';
+        actions.style.margin = '14px 0 0 0';
+        actions.style.padding = '0';
+        actions.style.display = 'flex';
+        actions.style.flexDirection = 'row';
+        actions.style.gap = '8px';
+        actions.style.boxSizing = 'border-box';
+        
+        const confirmButton = actions.querySelector('.swal2-confirm');
+        if (confirmButton) {
+          confirmButton.style.cssText += 'flex:1; width:auto; height:48px; margin:0; border-radius:12px; font-size:13px; font-weight:600; box-sizing:border-box;';
+        }
+        
+        const cancelButton = actions.querySelector('.swal2-cancel');
+        if (cancelButton) {
+          cancelButton.style.cssText += 'flex:1; width:auto; height:48px; margin:0; border-radius:12px; font-size:13px; font-weight:600; box-sizing:border-box;';
+        }
+      }
+    },
+    
+    preConfirm: async () => {
+      const username = document.getElementById('swal-username').value.trim();
+      const password = document.getElementById('swal-password').value.trim();
+      
+      if (!username || !password) {
+        await Swal.fire({
+          icon: 'warning',
+          title: '⚠️ ข้อมูลไม่ครบ',
+          text: 'กรุณากรอกชื่อผู้ใช้และรหัสผ่านให้ครบถ้วน',
+          confirmButtonText: 'ย้อนกลับ',
+          allowOutsideClick: false,
+          customClass: { popup: 'rounded-4 shadow' }
+        });
+        showLogin();
+        return false;
+      }
+      return [username, password];
+    }
+  });
+
+  if (dismiss === Swal.DismissReason.cancel) {
+    await Swal.fire({
+      icon: 'info',
+      title: '❎ ยกเลิกการเข้าสู่ระบบ',
+      text: 'คุณสามารถเข้าสู่ระบบใหม่ได้ภายหลัง',
+      confirmButtonText: 'ตกลง',
+      allowOutsideClick: false,
+      customClass: { popup: 'rounded-4 shadow' }
+    });
+    showMenu();
+    return;
+  }
+
+  if (credentials) {
+    const [username, password] = credentials;
+
+    Swal.fire({
+      icon: 'info',
+      title: 'กำลังเข้าสู่ระบบ...',
+      html: `
+        <div class="lds-wave">
+          <div></div><div></div><div></div><div></div><div></div>
+        </div>
+        <p class="mt-3">กรุณารอสักครู่</p>
+      `,
+      showConfirmButton: false,
+      timer: 7000,
+      timerProgressBar: true,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      customClass: { popup: 'rounded-4 shadow-lg p-3' }
+    });
+
+    google.script.run
+      .withSuccessHandler(async (result) => {
+        Swal.close();
+
+        if (result.success) {
+          failedLoginAttempts = 0;
+          const sessionInfo = {
+            token: result.token,
+            name: result.name,
+            username: result.username || username,
+            role: result.role,
+            provider: 'password',
+            timestamp: Date.now()
+          };
+          
+          localStorage.setItem('sessionInfo', JSON.stringify(sessionInfo));
+          $('#p1').fadeIn();
+
+          let welcomeText = '';
+          const role = String(result.role || '').trim().toLowerCase();
+          
+          if (role === 'admin' || role === 'staff') {
+            const roleText = (role === 'admin') ? 'ผู้ดูแลระบบ' : 'เจ้าหน้าที่';
+            welcomeText = `
+              <h3>📮 ยินดีต้อนรับ${roleText} ${result.name}</h3>
+              <p>เข้าสู่ระบบส่งไปรษณียบัตรเพื่อรายงานการบริจาคโลหิต</p>
+            `;
+          } else if (role === 'sdp_staff') {
+            welcomeText = `
+              <h3>🩸 ยินดีต้อนรับเจ้าหน้าที่ SDP ${result.name}</h3>
+              <p>กำลังเข้าสู่ระบบจัดการรอบบริจาค SDP</p>
+            `;
+          } else {
+            welcomeText = `
+              <h3>🩸 ยินดีต้อนรับ ${result.name}</h3>
+              <p>เข้าสู่ระบบบัตรบริจาคโลหิต Electronic โรงพยาบาลยะลา</p>
+            `;
+          }
+          
+          $('#welcome-message').html(welcomeText);
+
+          // const baseUrl = 'https://script.google.com/macros/s/AKfycbwFnngjZaChG6s5eMV2fRVOUKSwd7JOwVm_y1g8nUrSt-sxOyGbEXXhdja3PNBsMJq3Gg/exec';
+           const baseUrl = 'https://script.google.com/macros/s/AKfycbw0A1i3pUMMrE6swKtj757qNa5o_Ev-6nf8RysOzPEVQOEu6stxAp2xznzjSnjVmxI49g/exec';
+          
+          // setTimeout(() => {
+          //   if (role === 'admin' || role === 'staff' || role === 'sdp_staff') {
+          //     // admin / staff / sdp_staff -> Index
+          //     // sdp_staff จะถูกส่ง role ไปให้ Index เพื่อใช้สิทธิ์เฉพาะส่วนจัดการรอบ SDP
+          //     window.location.href = `${baseUrl}?action=admin&role=${encodeURIComponent(role)}`;
+          //   } else {
+          //     // user -> UserPage
+          //     window.location.href = `${baseUrl}?action=user`;
+          //   }
+          // }, 3000);
+
+          setTimeout(() => {
+  if (role === 'admin' || role === 'staff' || role === 'sdp_staff') {
+    window.location.href = `${baseUrl}?action=admin&token=${encodeURIComponent(result.token)}`;
+  } else {
+    window.location.href = `${baseUrl}?action=user&token=${encodeURIComponent(result.token)}`;
+  }
+}, 3000);
+          
+        } else {
+          failedLoginAttempts++;
+          if (failedLoginAttempts >= 3) {
+            await handleLockout();
+          } else {
+            await Swal.fire({
+              icon: 'error',
+              title: '❌ เข้าสู่ระบบล้มเหลว',
+              text: `ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง\n(ลองใหม่ได้อีก ${3 - failedLoginAttempts} ครั้ง)`,
+              confirmButtonText: 'ลองอีกครั้ง',
+              allowOutsideClick: false,
+              customClass: { popup: 'rounded-4 shadow-lg' }
+            });
+            showLogin();
+          }
+        }
+      })
+      .withFailureHandler(async (err) => {
+        await Swal.fire({
+          icon: 'error',
+          title: 'เกิดข้อผิดพลาด',
+          text: 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง',
+          confirmButtonText: 'ตกลง',
+          allowOutsideClick: false,
+          customClass: { popup: 'rounded-4 shadow-lg' }
+        });
+      })
+      .checkLogin(username, password);
+  }
+}
+
+async function showRegisterChoice() {
+  const { dismiss, ...result } = await Swal.fire({
+    title: '<span style="font-size: 1.5rem; font-weight: 700; color: #1f2937;">เลือกประเภทผู้ใช้งาน</span>',
+    html: `
+      <style>
+        .register-choice-container {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          margin-top: 1rem;
+          padding: 0 4px;
+        }
+
+        .role-btn {
+          display: flex;
+          align-items: center;
+          text-align: left;
+          padding: 14px 18px;
+          border: 2px solid #e5e7eb;
+          border-radius: 14px;
+          background-color: #ffffff;
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          cursor: pointer;
+          width: 100%;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .role-btn .emoji-wrapper {
+          font-size: 2.2rem;
+          margin-right: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #f3f4f6;
+          width: 55px;
+          height: 55px;
+          border-radius: 12px;
+          flex-shrink: 0;
+          transition: transform 0.2s ease;
+        }
+
+        .role-btn-content {
+          display: flex;
+          flex-direction: column;
+          flex-grow: 1;
+        }
+
+        .role-btn strong {
+          font-size: 1.05rem;
+          font-weight: 600;
+          color: #111827;
+          margin-bottom: 2px;
+        }
+
+        .role-btn small {
+          font-size: 0.85rem;
+          color: #6b7280;
+          line-height: 1.3;
+        }
+
+        /* Hover & Color Themes */
+        .role-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .role-btn:hover .emoji-wrapper {
+          transform: scale(1.08);
+        }
+
+        .user-btn:hover {
+          border-color: #10b981;
+          background-color: #f0fdf4;
+        }
+
+        .staff-btn:hover {
+          border-color: #3b82f6;
+          background-color: #eff6ff;
+        }
+
+        .sdp-btn:hover {
+          border-color: #ec4899;
+          background-color: #fdf2f8;
+        }
+      </style>
+
+      <div class="register-choice-container">
+        <button id="user-btn" class="role-btn user-btn" type="button">
+          <div class="emoji-wrapper">🙋‍♀️</div>
+          <div class="role-btn-content">
+            <strong>ผู้บริจาคโลหิต</strong>
+            <small>สำหรับผู้บริจาคที่ต้องการใช้งานบัตรบริจาค Electronic</small>
+          </div>
+        </button>
+
+        <button id="staff-btn" class="role-btn staff-btn" type="button">
+          <div class="emoji-wrapper">👮‍♂️</div>
+          <div class="role-btn-content">
+            <strong>เจ้าหน้าที่</strong>
+            <small>สำหรับเจ้าหน้าที่ธนาคารเลือดโรงพยาบาลยะลา</small>
+          </div>
+        </button>
+
+        <button id="sdpstaff-btn" class="role-btn sdp-btn" type="button">
+          <div class="emoji-wrapper">🩸</div>
+          <div class="role-btn-content">
+            <strong>เจ้าหน้าที่ SDP</strong>
+            <small>สำหรับเจ้าหน้าที่จัดการรอบบริจาคเกล็ดเลือด</small>
+          </div>
+        </button>
+      </div>
+    `,
+    showCancelButton: true,
+    cancelButtonText: '↩️ กลับ',
+    showConfirmButton: false,
+    allowOutsideClick: false,
+    buttonsStyling: false,
+    customClass: {
+      cancelButton: 'swal2-styled-cancel-custom' // สามารถไปแต่งเพิ่มที่ Global CSS ได้ถ้าต้องการ
+    },
+    didOpen: () => {
+      const swal = Swal.getPopup();
+
+      swal.querySelector('#user-btn')
+        .addEventListener('click', () => Swal.close({ role: 'user' }));
+
+      swal.querySelector('#staff-btn')
+        .addEventListener('click', () => Swal.close({ role: 'staff' }));
+
+      swal.querySelector('#sdpstaff-btn')
+        .addEventListener('click', () => Swal.close({ role: 'sdp_staff' }));
+    }
+  });
+
+  // 1. ตรวจสอบกรณีผู้ใช้กดยยกเลิก หรือไม่ได้เลือก Role
+  if (dismiss === Swal.DismissReason.cancel || !result.role) {
+    console.log('❌ ยกเลิกการลงทะเบียน — กลับสู่เมนูหลัก');
+    showMenu();
+    return;
+  }
+
+  const roleChoice = result.role;
+
+  // 2. จัดการเงื่อนไขตามประเภท Role ที่เลือก (แก้ไขจากโค้ดเดิมที่ซ้ำซ้อนและผิดโครงสร้าง)
+  if (roleChoice === 'user') {
+  showRegister('user');
+} else if (roleChoice === 'staff' || roleChoice === 'sdp_staff') {
+  const requested = await showRequestCode(roleChoice); // ✅ แก้ตรงนี้
+  if (requested) {
+    showRegister(roleChoice);
+  } else {
+    showMenu();
+  }
+}
+}
+
+// ขอรหัสยืนยันเจ้าหน้าที่
+async function showRequestCode(role) {
+  role = role || 'staff';
+  const roleLabel = role === 'sdp_staff' ? 'เจ้าหน้าที่ SDP' : 'เจ้าหน้าที่ทั่วไป';
+
+  const { value: email, dismiss } = await Swal.fire({
+    title: `📧 ขอรหัสยืนยัน${roleLabel}`,
+    input: 'email',
+    inputLabel: 'กรุณากรอกอีเมลของคุณ',
+    inputPlaceholder: 'your@email.com',
+    confirmButtonText: '📨 ขอรหัส',
+    showCancelButton: true,
+    cancelButtonText: '↩️ กลับ',
+    allowOutsideClick: false,
+    customClass: { popup: 'rounded-4 shadow' },
+    inputValidator: (value) => {
+      if (!value) return 'กรุณากรอกอีเมล';
+      if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value)) return 'รูปแบบอีเมลไม่ถูกต้อง';
+    }
+  });
+
+  if (dismiss === Swal.DismissReason.cancel || !email) return false;
+
+  Swal.fire({
+    title: '⏳ กำลังส่งรหัส...',
+    didOpen: () => Swal.showLoading(),
+    allowOutsideClick: false,
+    allowEscapeKey: false
+  });
+
+  return new Promise((resolve) => {
+    google.script.run
+      .withSuccessHandler((res) => {
+        if (res.success) {
+          Swal.fire({
+            icon: 'success',
+            title: '✅ ส่งรหัสสำเร็จ',
+            html: `ระบบได้ส่งรหัสยืนยันสำหรับ<b>${roleLabel}</b>ไปยังอีเมลผู้ดูแลแล้ว<br><br>กรุณารอการอนุมัติจากผู้ดูแล`,
+            allowOutsideClick: false,
+            confirmButtonText: 'ตกลง'
+          }).then(() => resolve(true));
+        } else {
+          Swal.fire({
+            icon: 'error', title: '❌ ไม่สามารถส่งรหัสได้',
+            text: res.message || 'เกิดข้อผิดพลาด',
+            allowOutsideClick: false, confirmButtonText: 'ตกลง'
+          }).then(() => resolve(false));
+        }
+      })
+      .withFailureHandler((err) => {
+        Swal.fire({
+          icon: 'error', title: '❌ ข้อผิดพลาด',
+          text: err.message || 'ไม่สามารถส่งรหัสได้',
+          allowOutsideClick: false, confirmButtonText: 'ตกลง'
+        }).then(() => resolve(false));
+      })
+      .generateVerificationCode(email, role); // ✅ ส่ง role ไปด้วย
+  });
+}
+
+// ลงทะเบียน
+async function showRegister(role = 'user') {
+  const isStaff = role === 'staff' || role === 'sdp_staff'; 
+
+  // --- ฟังก์ชันย่อย: ยืนยันข้อมูลเพิ่มเติมสำหรับ Merge Email ---
+  async function askExtraVerification() {
+    const { value, dismiss } = await Swal.fire({
+      title: '<strong style="font-size: 19px;">ยืนยันข้อมูลผู้บริจาค</strong>',
+      html: `
+        <div style="width:100%; max-width:400px; margin:0 auto; box-sizing:border-box;">
+          <!-- ชื่อผู้บริจาค -->
+          <div style="text-align:left; margin-bottom:14px;">
+            <label style="display:block; margin:0 0 6px 3px; font-size:14px; font-weight:600; color:#555;">📛 ชื่อผู้บริจาค</label>
+            <div style="position:relative; width:100%;">
+              <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:18px; z-index:2; pointer-events:none;">👤</span>
+              <input id="donor-name" class="swal2-input" placeholder="ชื่อ นามสกุล" style="width:100%; height:52px; box-sizing:border-box; margin:0; padding:0 14px 0 44px; border:1px solid #ddd; border-radius:14px; background:#f8f9fa; color:#222 !important; -webkit-text-fill-color:#222; font-size:16px; font-weight:500;">
+            </div>
+          </div>
+
+          <!-- เลขบัตรประชาชน -->
+          <div style="text-align:left; margin-bottom:14px;">
+            <label style="display:block; margin:0 0 6px 3px; font-size:14px; font-weight:600; color:#555;">🆔 เลขบัตรประชาชน</label>
+            <div style="position:relative; width:100%;">
+              <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:18px; z-index:2; pointer-events:none;">🆔</span>
+              <input id="citizen-id" class="swal2-input" placeholder="เลขประจำตัว 13 หลัก" style="width:100%; height:52px; box-sizing:border-box; margin:0; padding:0 14px 0 44px; border:1px solid #ddd; border-radius:14px; background:#f8f9fa; color:#222 !important; -webkit-text-fill-color:#222; font-size:16px; font-weight:500;">
+            </div>
+          </div>
+
+          <!-- เลขผู้บริจาค -->
+          <div style="text-align:left; margin-bottom:14px;">
+            <label style="display:block; margin:0 0 6px 3px; font-size:14px; font-weight:600; color:#555;">🔢 เลขผู้บริจาค</label>
+            <div style="position:relative; width:100%;">
+              <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:18px; z-index:2; pointer-events:none;">🔢</span>
+              <input id="donor-id" class="swal2-input" placeholder="เช่น 46168..." style="width:100%; height:52px; box-sizing:border-box; margin:0; padding:0 14px 0 44px; border:1px solid #ddd; border-radius:14px; background:#f8f9fa; color:#222 !important; -webkit-text-fill-color:#222; font-size:16px; font-weight:500;">
+            </div>
+          </div>
+
+          <!-- เพศ -->
+          <div style="text-align:left; margin-bottom:14px;">
+            <label style="display:block; margin:0 0 6px 3px; font-size:14px; font-weight:600; color:#555;">🚻 เพศ</label>
+            <div style="position:relative; width:100%;">
+              <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:18px; z-index:2; pointer-events:none;">🚻</span>
+              <input id="gender" class="swal2-input" placeholder="ชาย / หญิง" style="width:100%; height:52px; box-sizing:border-box; margin:0; padding:0 14px 0 44px; border:1px solid #ddd; border-radius:14px; background:#f8f9fa; color:#222 !important; -webkit-text-fill-color:#222; font-size:16px; font-weight:500;">
+            </div>
+          </div>
+
+          <!-- หมู่เลือด -->
+          <div style="text-align:left; margin-bottom:8px;">
+            <label style="display:block; margin:0 0 6px 3px; font-size:14px; font-weight:600; color:#555;">🩸 หมู่เลือด</label>
+            <div style="position:relative; width:100%;">
+              <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:18px; z-index:2; pointer-events:none;">🩸</span>
+              <input id="blood-type" class="swal2-input" placeholder="A+, B-, O, ฯลฯ" style="width:100%; height:52px; box-sizing:border-box; margin:0; padding:0 14px 0 44px; border:1px solid #ddd; border-radius:14px; background:#f8f9fa; color:#222 !important; -webkit-text-fill-color:#222; font-size:16px; font-weight:500;">
+            </div>
+          </div>
+        </div>
+      `,
+      confirmButtonText: '✅ ยืนยัน',
+      cancelButtonText: 'ยกเลิก',
+      showCancelButton: true,
+      customClass: { popup: 'rounded-4 shadow-lg' },
+      preConfirm: () => {
+        const donorName = document.getElementById('donor-name')?.value?.trim() || '';
+        const citizenId = document.getElementById('citizen-id')?.value?.trim() || '';
+        const donorId = document.getElementById('donor-id')?.value?.trim() || '';
+        const gender = document.getElementById('gender')?.value?.trim() || '';
+        const bloodType = document.getElementById('blood-type')?.value?.trim() || '';
+
+        if (!donorName || !citizenId || !donorId || !gender || !bloodType) {
+          Swal.showValidationMessage('กรุณากรอกข้อมูลให้ครบ');
+          return false;
+        }
+
+        return { donorName, citizenId, donorId, gender, bloodType };
+      }
+    });
+
+    if (dismiss === Swal.DismissReason.cancel) return null;
+    return value;
+  }
+
+  // --- ฟังก์ชันย่อย: จัดการรวมอีเมล ---
+  async function handleMergeEmail(oldEmail, newEmail) {
+    const confirmMerge = await Swal.fire({
+      icon: 'question',
+      title: 'พบข้อมูลเก่าในระบบ',
+      html: `อีเมลใหม่ของคุณตรงกับข้อมูลเดิมที่เคยใช้ <b>${oldEmail}</b><br>ต้องการผูกข้อมูลเก่าเข้ากับอีเมลใหม่นี้หรือไม่?`,
+      showCancelButton: true,
+      confirmButtonText: '✅ ผูกข้อมูล',
+      cancelButtonText: '❌ ยกเลิก',
+      customClass: { popup: 'rounded-4 shadow-lg' }
+    });
+
+    if (!confirmMerge.isConfirmed) {
+      await Swal.fire({ title: 'ยกเลิก', text: 'คุณสามารถสมัครใหม่แทนได้', icon: 'info', customClass: { popup: 'rounded-4 shadow' } });
+      return false;
+    }
+
+    const extraInfo = await askExtraVerification();
+    if (!extraInfo) {
+      await Swal.fire({ title: 'ยกเลิก', text: 'คุณสามารถสมัครใหม่แทนได้', icon: 'info', customClass: { popup: 'rounded-4 shadow' } });
+      return false;
+    }
+
+    const confirmFinal = await Swal.fire({
+      icon: 'question',
+      title: 'ยืนยันการผูกข้อมูล',
+      html: `คุณแน่ใจหรือไม่ว่าต้องการผูกข้อมูลผู้บริจาคเก่ากับอีเมลใหม่ "${newEmail}"`,
+      showCancelButton: true,
+      confirmButtonText: '✅ ยืนยันการผูก',
+      cancelButtonText: 'ยกเลิก',
+      customClass: { popup: 'rounded-4 shadow-lg' }
+    });
+
+    if (!confirmFinal.isConfirmed) {
+      await Swal.fire({ title: 'ยกเลิก', text: 'คุณสามารถสมัครใหม่แทนได้', icon: 'info', customClass: { popup: 'rounded-4 shadow' } });
+      return false;
+    }
+
+    return new Promise((resolve) => {
+      google.script.run
+        .withSuccessHandler(async (res) => {
+          Swal.close();
+          if (res.success) {
+            await Swal.fire({ title: '✅ ผูกข้อมูลสำเร็จ', text: res.message, icon: 'success', customClass: { popup: 'rounded-4 shadow' } });
+            resolve('merged');
+          } else {
+            await Swal.fire({ title: '❌ ผูกข้อมูลล้มเหลว', text: res.message || 'กรุณาลองใหม่', icon: 'error', customClass: { popup: 'rounded-4 shadow' } });
+            resolve(false);
+          }
+        })
+        .withFailureHandler(async (err) => {
+          await Swal.fire({ title: '❌ ข้อผิดพลาด', text: err.message || 'เกิดข้อผิดพลาด', icon: 'error', customClass: { popup: 'rounded-4 shadow' } });
+          resolve(false);
+        })
+        .mergeEmail(oldEmail, newEmail, extraInfo);
+    });
+  }
+
+  // --- ลูปฟอร์มลงทะเบียนหลัก ---
+  while (true) {
+    const regTitle = isStaff
+      ? (role === 'sdp_staff' ? 'ลงทะเบียนเจ้าหน้าที่ SDP 🩸' : 'ลงทะเบียนเจ้าหน้าที่ 👮‍♂️')
+      : 'ลงทะเบียนผู้บริจาคโลหิต 🙋‍♀️';
+
+    const { value: regInfo, dismiss } = await Swal.fire({
+      title: `<span style="font-size: 20px; font-weight: bold;">${regTitle}</span>`,
+      html: `
+        <style>
+          .auto-pwd-box {
+            background: transparent;
+            border: 2px solid #3b82f6;
+            transition: all 0.2s ease-in-out;
+          }
+          .auto-pwd-box:hover, .auto-pwd-box.checked-state {
+            background: #3b82f6;
+          }
+          .auto-pwd-box:hover label, .auto-pwd-box.checked-state label {
+            color: #ffffff !important;
+          }
+        </style>
+        <div style="width:100%; max-width:400px; margin:0 auto; box-sizing:border-box;">
+          <!-- Email -->
+          <div style="text-align:left; margin-bottom:14px;">
+            <label style="display:block; margin:0 0 6px 3px; font-size:14px; font-weight:600; color:#555;">
+              📧 อีเมล
+            </label>
+            <div style="position:relative; width:100%;">
+              <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:18px; z-index:2; pointer-events:none;">✉️</span>
+              <input id="reg-username" type="email" class="swal2-input" placeholder="your@email.com" style="width:100%; height:52px; box-sizing:border-box; margin:0; padding:0 14px 0 44px; border:1px solid #ddd; border-radius:14px; background:#f8f9fa; color:#222 !important; -webkit-text-fill-color:#222; font-size:16px; font-weight:500;">
+            </div>
+            ${isStaff ? `<small style="color: #666; display:block; text-align:left; margin-top:5px; font-size:12px;">* ต้องใช้อีเมลเดียวกับที่ใช้ขอรหัสยืนยัน${role === 'sdp_staff' ? ' (เจ้าหน้าที่ SDP)' : ''}</small>` : ''}
+          </div>
+
+          <!-- Checkbox Auto Password -->
+<div id="auto-pwd-container" class="auto-pwd-box" style="width: fit-content; text-align: left; margin-bottom: 8px; padding: 6px 8px; border-radius: 8px; box-sizing: border-box; cursor: pointer;">
+  <label style="font-size: 12px; font-weight: 600; color: #3b82f6; cursor: pointer; display: flex; align-items: center; gap: 6px; margin: 0; transition: color 0.2s;">
+    <input type="checkbox" id="auto-password-toggle" style="width: 12px; height: 12px; cursor: pointer; accent-color: #1d4ed8;" />
+    ระบบสร้างรหัสผ่านอัตโนมัติ
+  </label>
+</div>
+
+          <!-- Password -->
+          <div id="password-group" style="text-align:left; margin-bottom:14px; display: ${isAutoPassword ? 'none' : 'block'};">
+            <label style="display:block; margin:0 0 6px 3px; font-size:14px; font-weight:600; color:#555;">
+              🔐 รหัสผ่าน [อย่างน้อย 6 ตัว]
+            </label>
+            <div style="position:relative; width:100%;">
+              <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:18px; z-index:2; pointer-events:none;">🔒</span>
+              <input id="reg-password" type="password" class="swal2-input" placeholder="เช่น m4!Tz9" style="width:100%; height:52px; box-sizing:border-box; margin:0; padding:0 14px 0 44px; border:1px solid #ddd; border-radius:14px; background:#f8f9fa; color:#222 !important; -webkit-text-fill-color:#222; font-size:16px; font-weight:500;">
+            </div>
+          </div>
+
+          <!-- ชื่อ-นามสกุล -->
+          <div style="text-align:left; margin-bottom:14px;">
+            <label style="display:block; margin:0 0 6px 3px; font-size:14px; font-weight:600; color:#555;">
+              📛 ชื่อนามสกุล
+            </label>
+            <div style="position:relative; width:100%;">
+              <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:18px; z-index:2; pointer-events:none;">👤</span>
+              <input id="reg-name" class="swal2-input" placeholder="เช่น นายสมชาย ใจดี" style="width:100%; height:52px; box-sizing:border-box; margin:0; padding:0 14px 0 44px; border:1px solid #ddd; border-radius:14px; background:#f8f9fa; color:#222 !important; -webkit-text-fill-color:#222; font-size:16px; font-weight:500;">
+            </div>
+          </div>
+
+          ${!isStaff ? `
+            <!-- เลขประจำตัวประชาชน -->
+            <div style="text-align:left; margin-bottom:8px;">
+              <label style="display:block; margin:0 0 6px 3px; font-size:14px; font-weight:600; color:#555;">
+                🆔 เลขประจำตัวประชาชน
+              </label>
+              <div style="position:relative; width:100%;">
+                <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:18px; z-index:2; pointer-events:none;">🆔</span>
+                <input id="reg-citizen" class="swal2-input" placeholder="เลขบัตรประชาชน 13 หลัก" style="width:100%; height:52px; box-sizing:border-box; margin:0; padding:0 14px 0 44px; border:1px solid #ddd; border-radius:14px; background:#f8f9fa; color:#222 !important; -webkit-text-fill-color:#222; font-size:16px; font-weight:500;">
+              </div>
+            </div>
+          ` : ''}
+
+          ${isStaff ? `
+            <!-- รหัสยืนยัน -->
+            <div style="text-align:left; margin-bottom:8px;">
+              <label style="display:block; margin:0 0 6px 3px; font-size:14px; font-weight:600; color:#555;">
+                🆔 รหัสยืนยัน
+              </label>
+              <div style="position:relative; width:100%;">
+                <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:18px; z-index:2; pointer-events:none;">🔑</span>
+                <input id="reg-code" class="swal2-input" placeholder="รหัสยืนยัน" style="width:100%; height:52px; box-sizing:border-box; margin:0; padding:0 14px 0 44px; border:1px solid #ddd; border-radius:14px; background:#f8f9fa; color:#222 !important; -webkit-text-fill-color:#222; font-size:16px; font-weight:500;">
+              </div>
+            </div>
+          ` : ''}
+        </div>
+      `,
+      confirmButtonText: '✅ ลงทะเบียน',
+      cancelButtonText: '↩️ กลับ',
+      showCancelButton: true,
+      focusConfirm: false,
+      allowOutsideClick: false,
+      customClass: { popup: 'rounded-4 shadow-lg' },
+      didOpen: () => {
+        document.getElementById('reg-username')?.focus();
+
+        const toggle = document.getElementById('auto-password-toggle');
+        const pwdGroup = document.getElementById('password-group');
+        const container = document.getElementById('auto-pwd-container');
+
+        if (toggle && pwdGroup && container) {
+          toggle.checked = isAutoPassword;
+          if (isAutoPassword) {
+            container.classList.add('checked-state');
+          }
+
+          // คลิกที่กรอบเพื่อ Toggle เช็คบ็อกซ์และสลับสี
+          container.addEventListener('click', (e) => {
+            if (e.target !== toggle) {
+              toggle.checked = !toggle.checked;
+            }
+            isAutoPassword = toggle.checked;
+            pwdGroup.style.display = isAutoPassword ? 'none' : 'block';
+
+            if (isAutoPassword) {
+              container.classList.add('checked-state');
+            } else {
+              container.classList.remove('checked-state');
+            }
+          });
+
+          toggle.addEventListener('change', () => {
+            isAutoPassword = toggle.checked;
+            pwdGroup.style.display = isAutoPassword ? 'none' : 'block';
+
+            if (isAutoPassword) {
+              container.classList.add('checked-state');
+            } else {
+              container.classList.remove('checked-state');
+            }
+          });
+        }
+      },
+      preConfirm: () => {
+        const u = document.getElementById('reg-username')?.value?.trim() || '';
+        const p = document.getElementById('reg-password')?.value?.trim() || '';
+        const n = document.getElementById('reg-name')?.value?.trim() || '';
+        const c = isStaff ? (document.getElementById('reg-code')?.value?.trim() || '') : '';
+        const citizenId = !isStaff ? (document.getElementById('reg-citizen')?.value?.trim() || '') : '';
+
+        if (!u || !n || (isStaff && !c) || (!isStaff && !citizenId)) {
+          Swal.showValidationMessage('กรุณากรอกข้อมูลให้ครบถ้วน');
+          return false;
+        }
+
+        if (!isAutoPassword) {
+          if (!p) {
+            Swal.showValidationMessage('กรุณากรอกรหัสผ่าน');
+            return false;
+          }
+
+          const pwdCheck = isPasswordStrong(p);
+          if (!pwdCheck.valid) {
+            Swal.showValidationMessage(pwdCheck.message);
+            return false;
+          }
+        }
+
+        if (!isStaff && (!/^\d{13}$/.test(citizenId) || !isValidThaiId(citizenId))) {
+          Swal.showValidationMessage('เลขบัตรประชาชนไม่ถูกต้อง');
+          return false;
+        }
+
+        return [u, isAutoPassword ? null : p, n, role, c, citizenId, isAutoPassword];
+      }
+    });
+
+    if (dismiss === Swal.DismissReason.cancel) {
+      showRegisterChoice();
+      return;
+    }
+
+    if (regInfo) {
+      const [username, password, name, roleVal, code, citizenId, autoPasswordFlag] = regInfo;
+      const codeInput = (roleVal === 'staff' || roleVal === 'sdp_staff') ? code : citizenId;
+
+      Swal.fire({
+        title: 'กำลังลงทะเบียน...',
+        didOpen: () => Swal.showLoading(),
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        customClass: { popup: 'rounded-4 shadow-lg' }
+      });
+
+      if (!isStaff) {
+        const validationResult = await new Promise((resolve) => {
+          google.script.run
+            .withSuccessHandler(res => resolve(res))
+            .withFailureHandler(err => resolve({ success: false, message: err.message }))
+            .validateDonorInfo(username, name, citizenId);
+        });
+
+        if (validationResult.success) {
+          // ผ่าน
+        } else if (validationResult.partialMatch) {
+          const oldUserCheck = await new Promise((resolve) => {
+            google.script.run
+              .withSuccessHandler(res => resolve(res))
+              .withFailureHandler(err => resolve({ success: false, message: err.message }))
+              .validateOldUserBeforeMerge(name, citizenId);
+          });
+
+          if (oldUserCheck.success) {
+            const doMerge = await handleMergeEmail(oldUserCheck.oldEmail, username);
+            if (doMerge === 'merged') {
+              continue;
+            } else {
+              await Swal.fire({ title: 'ลงทะเบียนใหม่', text: 'คุณเลือกไม่ผูกข้อมูลเก่า', icon: 'info', customClass: { popup: 'rounded-4 shadow' } });
+              continue;
+            }
+          } else {
+            await Swal.fire({ title: '❌ ไม่พบข้อมูลผู้บริจาคในระบบ', text: 'กรุณาตรวจสอบข้อมูลอีกครั้ง', icon: 'error', customClass: { popup: 'rounded-4 shadow' } });
+            continue;
+          }
+        } else {
+          await Swal.fire({ title: '❌ ลงทะเบียนล้มเหลว', text: validationResult.message || 'กรุณาลองใหม่อีกครั้ง', icon: 'error', customClass: { popup: 'rounded-4 shadow' } });
+          return showRegister(role);
+        }
+      }
+
+      google.script.run
+        .withSuccessHandler((result) => {
+          if (result.success) {
+            showPasswordAfterRegister(result.password, username).then(() => {
+              Swal.fire({
+                icon: 'success',
+                title: '🎉 ลงทะเบียนสำเร็จ!',
+                text: 'คุณสามารถเข้าสู่ระบบได้ทันที',
+                allowOutsideClick: false,
+                confirmButtonText: 'เข้าสู่ระบบ',
+                customClass: { popup: 'rounded-4 shadow-lg' }
+              }).then(() => showLogin());
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: '❌ ลงทะเบียนล้มเหลว',
+              text: result.message || 'กรุณาลองใหม่อีกครั้ง',
+              confirmButtonText: 'ลองใหม่',
+              customClass: { popup: 'rounded-4 shadow-lg' }
+            }).then(() => showRegister(role));
+          }
+        })
+        .registerUserWithVerification(
+          username,
+          password,
+          name,
+          roleVal,
+          codeInput,
+          autoPasswordFlag
+        );
+
+      break;
+    }
+  }
+}
+
+function registerUserFinal(username, password, name, role, code, email) {
+
+    if (!password || password.length < 12) {
+    Swal.fire({
+      icon: 'error',
+      title: '❌ รหัสผ่านต้องยาวอย่างน้อย 12 ตัว',
+      text: 'กรุณากรอกรหัสผ่านให้ครบ 12 ตัว',
+      confirmButtonText: 'ตกลง'
+    });
+    return; // หยุดไม่ให้ส่งข้อมูลถ้ารหัสผ่านไม่ครบ
+  }
+
+  google.script.run
+    .withSuccessHandler((result) => {
+      if (result.success) {
+        // แสดงรหัสผ่านให้ user ดู หลังลงทะเบียนสำเร็จ
+        showPasswordAfterRegister(password, email).then(() => {
+          // ไปหน้า login หลังส่งอีเมลสำเร็จ
+          Swal.fire({
+            icon: 'success',
+            title: '🎉 ลงทะเบียนสำเร็จ!',
+            text: 'คุณสามารถเข้าสู่ระบบได้ทันที',
+            allowOutsideClick: false,
+            confirmButtonText: 'เข้าสู่ระบบ'
+          }).then(() => showLogin());
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: '❌ ลงทะเบียนล้มเหลว',
+          text: result.message || 'กรุณาลองใหม่อีกครั้ง',
+          confirmButtonText: 'ลองใหม่'
+        }).then(() => showRegister(role));
+      }
+    })
+    // ✅ อย่าลืมเพิ่ม email เข้าไปตรงนี้ด้วย
+    .registerUserWithVerification(username, password, name, role, code, email);
+}
+
+// ปรับ showPasswordAfterRegister เป็น async function คืน Promise เพื่อใช้ then()
+async function showPasswordAfterRegister(password, email) {
+  return new Promise((resolve) => {
+    Swal.fire({
+      title: 'สมัครเรียบร้อย! นี่คือรหัสผ่านของคุณ',
+      html: `
+        <input type="text" id="generated-password" class="swal2-input" readonly value="${password}" style="font-size: 1.2em; text-align: center;">
+        <p>กรุณาส่งรหัสผ่านนี้ไปยังอีเมลของคุณเพื่อความปลอดภัย</p>
+        <button id="email-btn" class="swal2-confirm swal2-styled" style="margin-top: 10px; background-color: #4CAF50;">📧 ส่งรหัสผ่านไปที่อีเมล</button>
+      `,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      showConfirmButton: false,
+      didOpen: () => {
+        const input = document.getElementById('generated-password');
+        const emailBtn = document.getElementById('email-btn');
+
+        // ป้องกันคลิกซ้ำ
+        emailBtn.disabled = false;
+
+        const onClickSendEmail = () => {
+          emailBtn.disabled = true;  // ปิดปุ่มกันคลิกซ้ำ
+          const emailValue = email;
+          const passwordValue = input.value;
+
+          if (!emailValue) {
+            Swal.fire('❌ ไม่พบอีเมล', 'กรุณาตรวจสอบข้อมูลอีเมลอีกครั้ง', 'error');
+            emailBtn.disabled = false;
+            return;
+          }
+
+          google.script.run
+            .withSuccessHandler(() => {
+
+Swal.fire({
+  title: '✅ ส่งรหัสผ่านไปยังอีเมลแล้ว!',
+  icon: 'success',
+  html: `<p>กำลังดำเนินการต่อ...</p>`,
+  timer: 3000, // 3 วินาที
+  timerProgressBar: true,
+  showConfirmButton: false,
+  allowOutsideClick: false,
+  allowEscapeKey: false,
+  didClose: () => {
+    resolve(); // ปิด Promise เมื่อ Swal ปิดเองจาก timer
+  }
+});
+            })
+            .withFailureHandler((error) => {
+  Swal.fire('❌ ข้อผิดพลาด', error.message, 'error');
+  emailBtn.disabled = false;
+})
+            .sendPasswordToEmail(emailValue, passwordValue);
+        };
+
+        emailBtn.addEventListener('click', onClickSendEmail, { once: true }); // ตั้งให้ฟังชันกดครั้งเดียว
+      }
+    });
+  });
+}
+
+function isValidThaiId(id) {
+  if (!/^\d{13}$/.test(id)) return false;
+  let sum = 0;
+  for (let i = 0; i < 12; i++) {
+    sum += parseInt(id.charAt(i), 10) * (13 - i);
+  }
+  const checkDigit = (11 - (sum % 11)) % 10;
+  return checkDigit === parseInt(id.charAt(12), 10);
+}
+
+function loginWithSocial(provider) {
+  Swal.fire({
+    title: 'กำลังเชื่อมต่อ...',
+    text: provider === 'google' ? 'ไปที่หน้ายืนยันตัวตนของ Google' : 'ไปที่หน้ายืนยันตัวตนของ LINE',
+    didOpen: () => Swal.showLoading(),
+    allowOutsideClick: false,
+    allowEscapeKey: false
+  });
+
+  google.script.run
+    .withSuccessHandler(url => {
+      window.top.location.href = url; // ออกจาก iframe sandbox ไป OAuth provider จริง
+    })
+    .withFailureHandler(err => {
+      Swal.fire('❌ ผิดพลาด', err.message || 'ไม่สามารถเชื่อมต่อได้', 'error');
+    })
+    .getSocialLoginUrl(provider);
+}
+
+function isPasswordStrong(password) {
+  // if (password.length < 12) return { valid: false, message: 'รหัสผ่านต้องมีความยาวอย่างน้อย 12 ตัวอักษร' };
+  if (password.length < 6) return { valid: false, message: 'รหัสผ่านต้องมีความยาวอย่างน้อย 6 ตัวอักษร' };
+  if (!/\d/.test(password)) return { valid: false, message: 'รหัสผ่านต้องมีตัวเลขอย่างน้อย 1 ตัว' };
+  if (!/[a-zA-Z]/.test(password)) return { valid: false, message: 'รหัสผ่านต้องมีตัวอักษรภาษาอังกฤษอย่างน้อย 1 ตัว' };
+  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) return { valid: false, message: 'รหัสผ่านต้องมีสัญลักษณ์พิเศษอย่างน้อย 1 ตัว' };
+  const blacklist = ['123456', 'password', '111111', '123123', 'qwerty', 'abc123', 'letmein', 'admin', 'password1'];
+  if (blacklist.includes(password.toLowerCase())) {
+    return { valid: false, message: 'รหัสผ่านนี้เป็นรหัสผ่านที่ไม่ปลอดภัย หลีกเลี่ยงการใช้รหัสผ่านที่ง่ายเกินไป' };
+  }
+  return { valid: true };
+}
+
+// ============================================================
+// 🔎 ค้นหาผลบริจาคสำหรับผู้ไม่มี Email — ทำเป็น SweetAlert flow
+// ============================================================
+
+function requestLocationPromise() {
+  return new Promise((resolve) => {
+    if (!navigator.geolocation) {
+      resolve({ ok: false, reason: 'unsupported' });
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      pos => resolve({
+        ok: true,
+        lat: pos.coords.latitude,
+        lng: pos.coords.longitude,
+        accuracy: pos.coords.accuracy   // ✅ เพิ่มบรรทัดนี้
+      }),
+      err => resolve({
+        ok: false,
+        reason: err.code === err.PERMISSION_DENIED ? 'denied' : 'error'
+      }),
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
+  });
+}
+
+async function showNoEmailSearchFlow() {
+
+  // ============================================================
+  // 📍 ตรวจสอบตำแหน่ง
+  // ============================================================
+
+  Swal.fire({
+
+    title: '📍 กำลังตรวจสอบตำแหน่ง...',
+
+    text: 'กรุณารอสักครู่',
+
+    allowOutsideClick: false,
+
+    allowEscapeKey: false,
+
+    showConfirmButton: false,
+
+    width: 'min(92vw, 420px)',
+
+    padding: '1.2rem',
+
+    scrollbarPadding: false,
+
+    customClass: {
+      popup: 'gps-mobile-popup',
+      title: 'gps-mobile-title',
+      htmlContainer: 'gps-mobile-html'
+    },
+
+    didOpen: () => {
+
+      Swal.showLoading();
+
+    }
+
+  });
+
+
+  const loc = await requestLocationPromise();
+
+
+  // ============================================================
+  // ❌ GPS ถูกปฏิเสธ หรืออุปกรณ์ไม่รองรับ
+  // ============================================================
+
+  if (!loc.ok) {
+
+    const result = await Swal.fire({
+
+      icon: 'warning',
+
+      title: '📍 ต้องเปิด GPS',
+
+      html: `
+        <div
+          style="
+            text-align:center;
+            line-height:1.6;
+          "
+        >
+
+          <div>
+            การค้นหาผลการบริจาคโลหิตสามารถใช้งานได้เฉพาะ
+          </div>
+
+          <b>
+            เฉพาะบริเวรห้องบริจาคโลหิต โรงพยาบาลยะลาเท่านั้น
+          </b>
+
+          <br><br>
+
+          <div>
+            กรุณาเปิดสิทธิ์ตำแหน่ง
+            <br>
+            (Location)
+            ให้กับเว็บไซต์นี้
+          </div>
+
+        </div>
+      `,
+
+      showCancelButton: true,
+
+      confirmButtonText: '🔄 ลองใหม่',
+
+      cancelButtonText: '↩️ กลับเมนูหลัก',
+
+      allowOutsideClick: false,
+
+      allowEscapeKey: false,
+
+      width: 'min(92vw, 420px)',
+
+      padding: '1.2rem',
+
+      scrollbarPadding: false,
+
+      customClass: {
+        popup: 'gps-mobile-popup',
+        title: 'gps-mobile-title',
+        htmlContainer: 'gps-mobile-html',
+        actions: 'gps-mobile-actions'
+      }
+
+    });
+
+
+    if (result.isConfirmed) {
+
+      return showNoEmailSearchFlow();
+
+    }
+
+    return showMenu();
+
+  }
+
+
+  // ============================================================
+  // 📍 ตรวจสอบความแม่นยำ GPS
+  // ============================================================
+
+  const MAX_ACCEPTABLE_ACCURACY = 100;
+
+
+  if (
+    loc.accuracy &&
+    loc.accuracy > MAX_ACCEPTABLE_ACCURACY
+  ) {
+
+    const retry = await Swal.fire({
+
+      icon: 'warning',
+
+      title: '📍 สัญญาณ GPS ไม่แม่นยำพอ',
+
+      html: `
+        <div
+          style="
+            text-align:center;
+            line-height:1.6;
+          "
+        >
+
+          <div>
+            ความแม่นยำของตำแหน่งที่ได้
+          </div>
+
+          <b
+            style="
+              font-size:1.25rem;
+            "
+          >
+            ±${Math.round(loc.accuracy)} เมตร
+          </b>
+
+          <br>
+
+          <div>
+            ซึ่งไม่แม่นยำพอสำหรับการยืนยันตำแหน่ง
+          </div>
+
+          <br>
+
+          <div
+            style="
+              font-size:0.85rem;
+              color:#aaa;
+            "
+          >
+            กรุณาใช้โทรศัพท์มือถือที่เปิด GPS
+            <br>
+            ไม่ใช่แค่ Location จาก WiFi/คอมพิวเตอร์
+            <br>
+            แล้วลองใหม่
+          </div>
+
+        </div>
+      `,
+
+      showCancelButton: true,
+
+      allowOutsideClick: false,
+
+      confirmButtonText: '🔄 ลองใหม่',
+
+      cancelButtonText: '↩️ กลับเมนูหลัก',
+
+      width: 'min(92vw, 420px)',
+
+      padding: '1.2rem',
+
+      scrollbarPadding: false,
+
+      customClass: {
+        popup: 'gps-mobile-popup',
+        title: 'gps-mobile-title',
+        htmlContainer: 'gps-mobile-html',
+        actions: 'gps-mobile-actions'
+      }
+
+    });
+
+
+    if (retry.isConfirmed) {
+
+      return showNoEmailSearchFlow();
+
+    }
+
+    return showMenu();
+
+  }
+
+
+  // ============================================================
+  // 📍 ผ่านการเช็คความแม่นยำแล้ว
+  // → เช็คระยะทางจริงกับเซิร์ฟเวอร์
+  // ============================================================
+
+  google.script.run
+
+    .withSuccessHandler(check => {
+
+      console.log(
+        'Hospital check:',
+        check
+      );
+
+
+      // ========================================================
+      // ❌ อยู่นอกพื้นที่
+      // ========================================================
+
+      if (
+        !check ||
+        check.success !== true
+      ) {
+
+        Swal.fire({
+
+          icon: 'error',
+
+          title: '📍 อยู่นอกพื้นที่ห้องบริจาคโลหิต โรงพยาบาลยะลา',
+
+          html: `
+            <div
+              style="
+                text-align:center;
+                line-height:1.6;
+              "
+            >
+
+              <div>
+                ระบบค้นหาผลการบริจาคโลหิตสามารถใช้งานได้
+              </div>
+
+              <b>
+                เฉพาะบริเวรห้องบริจาคโลหิต โรงพยาบาลยะลาเท่านั้น
+              </b>
+
+              <br><br>
+
+              <div>
+                ระยะห่างจากห้องบริจาคโลหิต โรงพยาบาลยะลา
+              </div>
+
+              <b
+                style="
+                  display:block;
+                  margin-top:4px;
+                  font-size:1.4rem;
+                  color:#f44336;
+                "
+              >
+                ${
+                  check &&
+                  check.distance != null
+                    ? check.distance.toLocaleString()
+                    : '-'
+                }
+                เมตร
+              </b>
+
+              <br>
+
+              <div>
+                พื้นที่ที่อนุญาต
+              </div>
+
+              <b>
+                ไม่เกิน ${
+                  check &&
+                  check.radius != null
+                    ? check.radius
+                    : 300
+                } เมตร
+              </b>
+
+            </div>
+          `,
+
+          confirmButtonText: '↩️ กลับเมนูหลัก',
+
+          allowOutsideClick: false,
+
+          allowEscapeKey: false,
+
+          width: 'min(92vw, 420px)',
+
+          padding: '1.2rem',
+
+          scrollbarPadding: false,
+
+          customClass: {
+            popup: 'gps-mobile-popup',
+            title: 'gps-mobile-title',
+            htmlContainer: 'gps-mobile-html',
+            actions: 'gps-mobile-actions'
+          }
+
+        }).then(() => {
+
+          showMenu();
+
+        });
+
+        return;
+
+      }
+
+
+      // ========================================================
+      // ✅ ผ่านทุกเงื่อนไข → เปิดฟอร์มค้นหา
+      // ========================================================
+
+      showNoEmailSearchForm(
+        loc.lat,
+        loc.lng
+      );
+
+    })
+
+
+    // ============================================================
+    // ❌ Google Apps Script Error
+    // ============================================================
+
+    .withFailureHandler(err => {
+
+      console.error(
+        'checkHospitalLocation error:',
+        err
+      );
+
+
+      Swal.fire({
+
+        icon: 'error',
+
+        title: '❌ ไม่สามารถตรวจสอบตำแหน่ง',
+
+        text:
+          err.message ||
+          'เกิดข้อผิดพลาด',
+
+        confirmButtonText:
+          '↩️ กลับเมนูหลัก',
+
+        allowOutsideClick: false,
+
+        allowEscapeKey: false,
+
+        width: 'min(92vw, 420px)',
+
+        padding: '1.2rem',
+
+        scrollbarPadding: false,
+
+        customClass: {
+          popup: 'gps-mobile-popup',
+          title: 'gps-mobile-title',
+          htmlContainer: 'gps-mobile-html',
+          actions: 'gps-mobile-actions'
+        }
+
+      }).then(() => {
+
+        showMenu();
+
+      });
+
+    })
+
+
+    .checkHospitalLocation(
+      Number(loc.lat),
+      Number(loc.lng)
+    );
+
+}
+ 
+function toThaiShortDateForSearch(isoDate) {
+  if (!isoDate) return null;
+  const [y, m, d] = isoDate.split('-');
+  return `${d}/${m}/${parseInt(y, 10) + 543}`;
+}
+
+async function showNoEmailSearchForm(lat, lng) {
+
+  const { value: formData, dismiss } = await Swal.fire({
+
+    icon: 'question',
+
+    title: '🔎 ค้นหาผลการบริจาคโลหิต',
+
+    html: `
+      <div
+        style="
+          width:100%;
+          max-width:360px;
+          margin:0 auto;
+          box-sizing:border-box;
+          text-align:left;
+        "
+      >
+
+        <!-- คำอธิบาย -->
+        <p
+          style="
+            font-size:0.78rem;
+            color:#888;
+            line-height:1.45;
+            text-align:center;
+            margin:0 0 14px 0;
+          "
+        >
+          สำหรับผู้ที่ไม่กรอกหรือไม่มี Email<br>
+          ใช้งานได้เฉพาะบริเวรห้องบริจาคโลหิต โรงพยาบาลยะลาเท่านั้น
+        </p>
+
+
+        <!-- =================================================
+             เลขประจำตัวประชาชน
+        ================================================== -->
+
+        <label
+          class="otp-label"
+          style="
+            display:block;
+            margin-bottom:5px;
+            font-size:0.85rem;
+            font-weight:600;
+          "
+        >
+          🪪 เลขประจำตัวประชาชน 13 หลัก
+        </label>
+
+        <input
+          id="searchCid"
+          class="swal2-input"
+          type="text"
+          inputmode="numeric"
+          maxlength="13"
+          autocomplete="off"
+          style="
+            width:100%;
+            max-width:100%;
+            height:42px;
+            margin:0 0 12px 0;
+            box-sizing:border-box;
+            font-size:1rem;
+            text-align:center;
+            letter-spacing:1px;
+          "
+        >
+
+
+        <!-- =================================================
+             วันที่บริจาค
+        ================================================== -->
+
+        <label
+          class="otp-label"
+          style="
+            display:block;
+            margin-bottom:5px;
+            font-size:0.85rem;
+            font-weight:600;
+          "
+        >
+          📅 วันที่บริจาค
+          <span
+            style="
+              font-weight:400;
+              color:#888;
+            "
+          >
+            (ไม่บังคับ)
+          </span>
+        </label>
+
+        <input
+          id="searchDate"
+          type="date"
+          class="swal2-input"
+          style="
+            width:100%;
+            max-width:100%;
+            height:42px;
+            margin:0 0 12px 0;
+            box-sizing:border-box;
+            font-size:1rem;
+          "
+        >
+
+
+        <!-- =================================================
+             OTP
+        ================================================== -->
+
+        <label
+          class="otp-label"
+          style="
+            display:block;
+            margin-bottom:8px;
+            font-size:0.85rem;
+            font-weight:600;
+            line-height:1.4;
+          "
+        >
+          🔐 กรุณากรอกรหัสยืนยัน OTP จากเจ้าหน้าที่
+        </label>
+
+        <div class="otp-container">
+
+          <input
+            type="text"
+            inputmode="numeric"
+            maxlength="1"
+            class="otp-box"
+            data-index="0"
+            autocomplete="one-time-code"
+          >
+
+          <input
+            type="text"
+            inputmode="numeric"
+            maxlength="1"
+            class="otp-box"
+            data-index="1"
+          >
+
+          <input
+            type="text"
+            inputmode="numeric"
+            maxlength="1"
+            class="otp-box"
+            data-index="2"
+          >
+
+          <input
+            type="text"
+            inputmode="numeric"
+            maxlength="1"
+            class="otp-box"
+            data-index="3"
+          >
+
+          <input
+            type="text"
+            inputmode="numeric"
+            maxlength="1"
+            class="otp-box"
+            data-index="4"
+          >
+
+          <input
+            type="text"
+            inputmode="numeric"
+            maxlength="1"
+            class="otp-box"
+            data-index="5"
+          >
+
+        </div>
+
+      </div>
+    `,
+
+    showCancelButton: true,
+
+    allowOutsideClick: false,
+
+    confirmButtonText: '🔍 ค้นหา',
+
+    cancelButtonText: '↩️ กลับ',
+
+    width: 'min(92vw, 420px)',
+
+    padding: '1.2rem',
+
+    scrollbarPadding: false,
+
+    customClass: {
+      popup: 'no-email-search-popup',
+      title: 'no-email-search-title',
+      htmlContainer: 'no-email-search-html',
+      actions: 'no-email-search-actions'
+    },
+
+
+    /* =====================================================
+       เปิดฟอร์ม
+    ====================================================== */
+
+    didOpen: () => {
+
+      /* -------------------------------
+         จำกัด CID เป็นตัวเลขเท่านั้น
+      -------------------------------- */
+
+      const cidInput =
+        document.getElementById('searchCid');
+
+      if (cidInput) {
+
+        cidInput.addEventListener('input', function () {
+
+          this.value =
+            this.value
+              .replace(/\D/g, '')
+              .slice(0, 13);
+
+        });
+
+      }
+
+
+      /* -------------------------------
+         OTP
+      -------------------------------- */
+
+      const otpInputs =
+        Array.from(
+          document.querySelectorAll('.otp-box')
+        );
+
+
+      otpInputs.forEach((input, idx) => {
+
+
+        /* ==============================
+           พิมพ์ OTP
+        =============================== */
+
+        input.addEventListener('input', (e) => {
+
+          const val =
+            e.target.value
+              .replace(/[^0-9]/g, '');
+
+          e.target.value =
+            val.slice(-1);
+
+
+          /* ไปช่องถัดไป */
+
+          if (
+            val &&
+            idx < otpInputs.length - 1
+          ) {
+
+            otpInputs[idx + 1].focus();
+
+          }
+
+        });
+
+
+        /* ==============================
+           Backspace
+        =============================== */
+
+        input.addEventListener('keydown', (e) => {
+
+          if (
+            e.key === 'Backspace' &&
+            !e.target.value &&
+            idx > 0
+          ) {
+
+            otpInputs[idx - 1].focus();
+
+          }
+
+        });
+
+
+        /* ==============================
+           Paste OTP
+        =============================== */
+
+        input.addEventListener('paste', (e) => {
+
+          e.preventDefault();
+
+          const paste =
+            (
+              e.clipboardData ||
+              window.clipboardData
+            )
+            .getData('text')
+            .replace(/[^0-9]/g, '')
+            .slice(0, 6);
+
+
+          if (!paste) return;
+
+
+          otpInputs.forEach((box, i) => {
+
+            box.value =
+              paste[i] || '';
+
+          });
+
+
+          const nextIndex =
+            Math.min(
+              paste.length,
+              otpInputs.length
+            ) - 1;
+
+
+          if (nextIndex >= 0) {
+
+            otpInputs[nextIndex].focus();
+
+          }
+
+        });
+
+      });
+
+            /* -------------------------------
+         Focus ช่อง เลขบัตรประชาชน (CID) แรก
+      -------------------------------- */
+
+      document.getElementById('searchCid')?.focus();
+
+    },
+
+
+    /* =====================================================
+       ตรวจสอบข้อมูลก่อนค้นหา
+    ====================================================== */
+
+    preConfirm: () => {
+
+      const cid =
+        document
+          .getElementById('searchCid')
+          .value
+          .trim();
+
+
+      const dateVal =
+        document
+          .getElementById('searchDate')
+          .value;
+
+
+      const totp =
+        Array
+          .from(
+            document.querySelectorAll('.otp-box')
+          )
+          .map(input => input.value)
+          .join('')
+          .trim();
+
+
+      /* -------------------------------
+         ตรวจ CID
+      -------------------------------- */
+
+      if (!/^\d{13}$/.test(cid)) {
+
+        Swal.showValidationMessage(
+          'กรุณากรอกเลขบัตรประชาชน 13 หลัก'
+        );
+
+        return false;
+
+      }
+
+
+      /* -------------------------------
+         ตรวจ OTP
+      -------------------------------- */
+
+      if (!/^\d{6}$/.test(totp)) {
+
+        Swal.showValidationMessage(
+          'กรุณากรอกรหัสยืนยันให้ครบ 6 หลัก'
+        );
+
+        return false;
+
+      }
+
+
+      return {
+        cid,
+        totp,
+        dateVal
+      };
+
+    }
+
+  });
+
+
+  /* =====================================================
+     กด "กลับ"
+  ====================================================== */
+
+  if (
+    dismiss === Swal.DismissReason.cancel ||
+    !formData
+  ) {
+
+    return showMenu();
+
+  }
+
+
+  /* =====================================================
+     แสดง Loading
+  ====================================================== */
+
+  Swal.fire({
+
+    title: '⏳ กำลังค้นหา...',
+
+    allowOutsideClick: false,
+
+    allowEscapeKey: false,
+
+    showConfirmButton: false,
+
+    didOpen: () => {
+
+      Swal.showLoading();
+
+    }
+
+  });
+
+
+  /* =====================================================
+     เรียก Google Apps Script
+  ====================================================== */
+
+  google.script.run
+
+    .withSuccessHandler(res => {
+
+
+      /* ===============================================
+         ไม่พบข้อมูล / ค้นหาไม่สำเร็จ
+      ================================================ */
+
+      if (!res.success) {
+
+        Swal.fire({
+
+          icon: 'error',
+
+          title: '❌ ไม่พบข้อมูล',
+
+          text: res.message,
+
+          showCancelButton: true,
+
+          allowOutsideClick: false,
+
+          confirmButtonText: '🔄 ค้นหาใหม่',
+
+          cancelButtonText: '↩️ กลับเมนูหลัก'
+
+        }).then(r => {
+
+
+          /* -------------------------------
+             ค้นหาใหม่
+          -------------------------------- */
+
+          if (r.isConfirmed) {
+
+            showNoEmailSearchForm(
+              lat,
+              lng
+            );
+
+          }
+
+
+          /* -------------------------------
+             กลับเมนู
+          -------------------------------- */
+
+          else {
+
+            showMenu();
+
+          }
+
+        });
+
+        return;
+
+      }
+
+
+      /* ===============================================
+         พบข้อมูล
+      ================================================ */
+
+      showNoEmailResults(
+        res.results,
+        formData.totp,
+        lat,
+        lng
+      );
+
+    })
+
+
+    /* =================================================
+       Google Apps Script Error
+    ================================================== */
+
+    .withFailureHandler(err => {
+
+      Swal.fire({
+
+        icon: 'error',
+
+        title: '❌ เกิดข้อผิดพลาด',
+
+        text:
+          err && err.message
+            ? err.message
+            : 'ไม่สามารถเชื่อมต่อระบบได้',
+
+        confirmButtonText: 'ตกลง',
+
+        allowOutsideClick: false
+
+      }).then(() => {
+
+        showMenu();
+
+      });
+
+    })
+
+
+    /* =================================================
+       ส่งข้อมูลไปยัง GAS
+    ================================================== */
+
+    .searchDonorResultsNoEmail({
+
+      citizenId: formData.cid,
+
+      totpCode: formData.totp,
+
+      lat: lat,
+
+      lng: lng,
+
+      donateDateFilter:
+        toThaiShortDateForSearch(
+          formData.dateVal
+        )
+
+    });
+
+}
+
+function showNoEmailResults(results, totp, lat, lng) {
+  const cards = results.map(r => `
+    <div
+      style="
+        border:1px solid #444;
+        border-radius:10px;
+        padding:12px;
+        margin-bottom:10px;
+        text-align:left;
+      "
+    >
+      <div style="font-weight:700;">
+        ${r.name}
+      </div>
+
+      <div
+        style="
+          font-size:0.78rem;
+          color:#ccc;
+          margin-top:4px;
+        "
+      >
+        วันที่บริจาค: ${r.donateDate || '-'}<br>
+        ถุงเลือดเลขที่: ${r.amount || '-'}<br>
+        หมู่เลือด: ${r.bloodGroup || '-'} |
+        ชนิด: ${r.bloodType || '-'}
+      </div>
+
+      <button
+        class="dl-btn"
+        data-sheet="${r.sheetName}"
+        data-row="${r.rowIndex}"
+        style="
+          margin-top:8px;
+          padding:7px 14px;
+          background:#15803d;
+          color:#fff;
+          border:none;
+          border-radius:8px;
+          cursor:pointer;
+          font-size:0.8rem;
+        "
+      >
+        📄 ดาวน์โหลดผลบริจาค (PDF)
+      </button>
+    </div>
+  `).join('');
+
+  Swal.fire({
+    title: `พบ ${results.length} รายการ`,
+
+    html: `
+      <div style="
+        max-height:400px;
+        overflow-y:auto;
+      ">
+        ${cards}
+      </div>
+    `,
+
+    showCancelButton: true,
+    showConfirmButton: false,
+    allowOutsideClick: false,
+
+    cancelButtonText: '↩️ กลับเมนูหลัก',
+
+    width: 600,
+
+    didOpen: () => {
+      document.querySelectorAll('.dl-btn').forEach(btn => {
+
+        btn.addEventListener('click', () => {
+          handleDownloadClick(
+            btn,
+            totp,
+            lat,
+            lng,
+            false
+          );
+        });
+
+      });
+    }
+
+  }).then(result => {
+
+    // =====================================================
+    // กด "กลับเมนูหลัก"
+    // =====================================================
+    if (result.dismiss === Swal.DismissReason.cancel) {
+
+      // ให้ Swal ปิดก่อน
+      Swal.close();
+
+      // รอให้ DOM / overlay ของ Swal ถูกเคลียร์
+      setTimeout(() => {
+        showMenu();
+      }, 100);
+
+    }
+
+  });
+}
+
+function handleDownloadClick(btn, totp, lat, lng, force) {
+
+  btn.disabled = true;
+  btn.textContent = force
+    ? 'กำลังสร้างไฟล์ใหม่...'
+    : 'กำลังตรวจสอบ...';
+
+
+  google.script.run
+
+    .withSuccessHandler(res => {
+
+      btn.disabled = false;
+      btn.textContent = '📄 ดาวน์โหลดผลบริจาค (PDF)';
+
+
+      if (!res.success) {
+
+        Swal.fire({
+
+          icon: 'error',
+
+          title: '❌ ผิดพลาด',
+
+          text:
+            res.message ||
+            'เกิดข้อผิดพลาด',
+
+          confirmButtonText: 'ตกลง',
+
+          allowOutsideClick: false,
+
+          width: 'min(92vw, 420px)',
+
+          customClass: {
+            popup: 'pdf-mobile-popup',
+            title: 'pdf-mobile-title',
+            htmlContainer: 'pdf-mobile-html',
+            actions: 'pdf-mobile-actions'
+          }
+
+        });
+
+        return;
+      }
+
+
+      /* =================================================
+         เคยดาวน์โหลดแล้ว → ถามก่อนดาวน์โหลดซ้ำ
+      ================================================== */
+
+      if (
+        res.alreadyDownloaded &&
+        !force
+      ) {
+
+        Swal.fire({
+
+          icon: 'warning',
+
+          title: '⚠️ เคยดาวน์โหลดไปแล้ว',
+
+          html: `
+            <div class="pdf-mobile-text">
+
+              <div>
+                ผลการบริจาคโลหิตรายการนี้
+                <br>
+                เคยถูกดาวน์โหลดไปแล้ว
+              </div>
+
+              ${
+                res.downloadCount
+                  ? `
+                    <div
+                      style="
+                        margin-top:6px;
+                        color:#aaa;
+                        font-size:0.85rem;
+                      "
+                    >
+                      🔢 จำนวนครั้งที่ดาวน์โหลด: ${res.downloadCount} ครั้ง
+                    </div>
+                  `
+                  : ''
+              }
+
+              ${
+                res.lastDownloadDate
+                  ? `
+                    <div
+                      style="
+                        margin-top:6px;
+                        color:#aaa;
+                        font-size:0.85rem;
+                      "
+                    >
+                      📅 เมื่อ: ${res.lastDownloadDate}
+                    </div>
+                  `
+                  : ''
+              }
+
+              <div
+                style="
+                  margin-top:14px;
+                  font-weight:600;
+                "
+              >
+                ต้องการดาวน์โหลดซ้ำอีกครั้งหรือไม่?
+              </div>
+
+            </div>
+          `,
+
+          showCancelButton: true,
+
+          allowOutsideClick: false,
+
+          confirmButtonText: '📄 ดาวน์โหลดอีกครั้ง',
+
+          cancelButtonText: '↩️ กลับเมนูหลัก',
+
+          width: 'min(92vw, 420px)',
+
+          padding: '1.2rem',
+
+          scrollbarPadding: false,
+
+          customClass: {
+            popup: 'pdf-mobile-popup',
+            title: 'pdf-mobile-title',
+            htmlContainer: 'pdf-mobile-html',
+            actions: 'pdf-mobile-actions'
+          }
+
+        }).then(r => {
+
+          if (r.isConfirmed) {
+
+            requestRedownload(
+              btn.dataset.sheet,
+              Number(btn.dataset.row),
+              totp,
+              lat,
+              lng
+            );
+
+          } else {
+
+            Swal.close();
+
+            setTimeout(() => {
+              showMenu();
+            }, 100);
+
+          }
+
+        });
+
+        return;
+      }
+
+
+      /* =================================================
+         เปิด PDF ปกติ
+      ================================================== */
+
+      if (res.url) {
+        window.open(res.url, '_blank');
+      }
+
+    })
+
+
+    .withFailureHandler(err => {
+
+      btn.disabled = false;
+
+      btn.textContent =
+        '📄 ดาวน์โหลดผลบริจาค (PDF)';
+
+
+      Swal.fire({
+
+        icon: 'error',
+
+        title: '❌ ผิดพลาด',
+
+        text:
+          err.message ||
+          'เกิดข้อผิดพลาด',
+
+        confirmButtonText: 'ตกลง',
+
+        allowOutsideClick: false,
+
+        width: 'min(92vw, 420px)',
+
+        customClass: {
+          popup: 'pdf-mobile-popup',
+          title: 'pdf-mobile-title',
+          htmlContainer: 'pdf-mobile-html',
+          actions: 'pdf-mobile-actions'
+        }
+
+      });
+
+    })
+
+
+    .generatePDFForNoEmailRecord(
+      btn.dataset.sheet,
+      Number(btn.dataset.row),
+      totp,
+      lat,
+      lng,
+      force
+    );
+}
+
+function requestRedownload(
+  sheetName,
+  rowIndex,
+  totp,
+  lat,
+  lng
+) {
+
+  /* =================================================
+     Loading
+  ================================================== */
+
+  Swal.fire({
+
+    title: '⏳ กำลังสร้างไฟล์ใหม่...',
+
+    html: `
+      <div
+        class="pdf-mobile-text"
+        style="
+          padding-top:4px;
+        "
+      >
+
+        <div class="lds-wave">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+
+        <p
+          style="
+            margin:14px 0 0 0;
+            color:#aaa;
+            font-size:0.85rem;
+          "
+        >
+          กรุณารอสักครู่
+          <br>
+          ระบบกำลังสร้างเอกสาร PDF
+        </p>
+
+      </div>
+    `,
+
+    showConfirmButton: false,
+
+    allowOutsideClick: false,
+
+    allowEscapeKey: false,
+
+    width: 'min(92vw, 420px)',
+
+    padding: '1.2rem',
+
+    scrollbarPadding: false,
+
+    customClass: {
+      popup: 'pdf-mobile-popup',
+      title: 'pdf-mobile-title',
+      htmlContainer: 'pdf-mobile-html'
+    },
+
+    didOpen: () => {
+
+      Swal.showLoading();
+
+    }
+
+  });
+
+
+  /* =================================================
+     สร้าง PDF
+  ================================================== */
+
+  google.script.run
+
+    .withSuccessHandler(res => {
+
+
+      /* ===============================================
+         สร้างไม่สำเร็จ
+      ================================================ */
+
+      if (!res.success) {
+
+        Swal.fire({
+
+          icon: 'error',
+
+          title: '❌ ผิดพลาด',
+
+          text:
+            res.message ||
+            'เกิดข้อผิดพลาด',
+
+          confirmButtonText:
+            '↩️ กลับเมนูหลัก',
+
+          allowOutsideClick: false,
+
+          width: 'min(92vw, 420px)',
+
+          customClass: {
+            popup: 'pdf-mobile-popup',
+            title: 'pdf-mobile-title',
+            htmlContainer: 'pdf-mobile-html',
+            actions: 'pdf-mobile-actions'
+          }
+
+        }).then(() => {
+
+          showMenu();
+
+        });
+
+        return;
+      }
+
+
+      /* ===============================================
+         เปิด PDF
+      ================================================ */
+
+      if (res.url) {
+
+        window.open(
+          res.url,
+          '_blank'
+        );
+
+      }
+
+
+      /* ===============================================
+         แจ้งสำเร็จ
+      ================================================ */
+
+      Swal.fire({
+
+        icon: 'success',
+
+        title: '✅ สร้างไฟล์สำเร็จ',
+
+        html: `
+          <div class="pdf-mobile-text">
+            ระบบได้เปิดไฟล์ PDF
+            <br>
+            ในแท็บใหม่ให้แล้ว
+
+            ${
+              res.downloadCount
+                ? `
+                  <div
+                    style="
+                      margin-top:10px;
+                      color:#aaa;
+                      font-size:0.85rem;
+                    "
+                  >
+                    🔢 ดาวน์โหลดไปแล้วทั้งหมด ${res.downloadCount} ครั้ง
+                  </div>
+                `
+                : ''
+            }
+          </div>
+        `,
+
+        confirmButtonText:
+          '↩️ กลับเมนูหลัก',
+
+        allowOutsideClick: false,
+
+        width: 'min(92vw, 420px)',
+
+        padding: '1.2rem',
+
+        scrollbarPadding: false,
+
+        customClass: {
+          popup: 'pdf-mobile-popup',
+          title: 'pdf-mobile-title',
+          htmlContainer: 'pdf-mobile-html',
+          actions: 'pdf-mobile-actions'
+        }
+
+      }).then(() => {
+
+        showMenu();
+
+      });
+
+    })
+
+
+    /* =================================================
+       GAS Error
+    ================================================== */
+
+    .withFailureHandler(err => {
+
+      Swal.fire({
+
+        icon: 'error',
+
+        title: '❌ ผิดพลาด',
+
+        text:
+          err.message ||
+          'เกิดข้อผิดพลาด',
+
+        confirmButtonText:
+          '↩️ กลับเมนูหลัก',
+
+        allowOutsideClick: false,
+
+        width: 'min(92vw, 420px)',
+
+        customClass: {
+          popup: 'pdf-mobile-popup',
+          title: 'pdf-mobile-title',
+          htmlContainer: 'pdf-mobile-html',
+          actions: 'pdf-mobile-actions'
+        }
+
+      }).then(() => {
+
+        showMenu();
+
+      });
+
+    })
+
+
+    .generatePDFForNoEmailRecord(
+      sheetName,
+      rowIndex,
+      totp,
+      lat,
+      lng,
+      true
+    );
+}
+
+</script>
+
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
 <html lang="th">
 <head>
 <meta charset="UTF-8">
@@ -64,4 +3735,4 @@
   <a class="hotspot" id="hotspot-results"  href="#" aria-label="ค้นหาผลการบริจาคโลหิต"></a>
 </div>
 </body>
-</html>
+</html> -->
